@@ -1,16 +1,17 @@
 package com.goit.url;
 
-import org.apache.catalina.User;
+
+import com.goit.auth.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 @Component
-public class ShortUrlGeneratorUser {
+public class ShortUrlGenerator {
     private final UrlRepository urlRepository;
 
     @Autowired
-    public ShortUrlGeneratorUser(UrlRepository urlRepository) {
+    public ShortUrlGenerator(UrlRepository urlRepository) {
         this.urlRepository = urlRepository;
     }
 

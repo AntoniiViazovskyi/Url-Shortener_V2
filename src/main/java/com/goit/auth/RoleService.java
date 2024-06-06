@@ -1,7 +1,5 @@
-package com.goit.service;
+package com.goit.auth;
 
-
-import com.goit.entities.Role;
 
 public interface RoleService {
 

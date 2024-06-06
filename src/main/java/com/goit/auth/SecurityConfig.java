@@ -1,6 +1,5 @@
-package com.goit.config;
+package com.goit.auth;
 
-import com.goit.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

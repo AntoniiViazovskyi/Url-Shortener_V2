@@ -1,4 +1,4 @@
-package com.goit.user;
+package com.goit.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,12 +11,14 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired private UserRepository userRepository;
+    @Autowired private RoleService roleService;
     @Autowired private PasswordEncoder passwordEncoder;
 
     // Create
     public UserDto createUser(UserDto userDTO, String rawPassword) {
         User user = UserMapper.toEntity(userDTO);
         user.setPassword(passwordEncoder.encode(rawPassword));
+        user.setRoles(List.of(roleService.findByName("ROLE_USER")));
         User savedUser = userRepository.save(user);
         return UserMapper.toDTO(savedUser);
     }
@@ -33,8 +35,8 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserDto getUserByUsername(String username) {
-        Optional<User> user = userRepository.findByUsername(username);
+    public UserDto getUserByEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
         return user.map(UserMapper::toDTO).orElse(null);
     }
 
@@ -43,7 +45,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            user.setUsername(userDTO.getUsername());
+            user.setEmail(userDTO.getEmail());
             User updatedUser = userRepository.save(user);
             return UserMapper.toDTO(updatedUser);
         }
@@ -60,7 +62,7 @@ public class UserServiceImpl implements UserService {
     }
 
     // Helper methods
-    public boolean existsByUsername(String username) {
-        return userRepository.findByUsername(username).isPresent();
+    public boolean existsByEmail(String email) {
+        return userRepository.findByEmail(email).isPresent();
     }
 }

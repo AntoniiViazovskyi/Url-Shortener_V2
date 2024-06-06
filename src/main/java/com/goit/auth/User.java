@@ -1,12 +1,16 @@
-package com.goit.entities;
+package com.goit.auth;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "users")
 public class User {
     @Id
@@ -25,4 +29,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private List<Role> roles;
+
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }

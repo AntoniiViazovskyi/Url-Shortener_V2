@@ -26,8 +26,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.flywaydb:flyway-core'
-	implementation 'org.flywaydb:flyway-database-postgresql'
+//	implementation 'org.flywaydb:flyway-core'
+//	implementation 'org.flywaydb:flyway-database-postgresql'
 
     implementation 'junit:junit:4.13.1'
     implementation 'org.junit.jupiter:junit-jupiter:5.8.1'

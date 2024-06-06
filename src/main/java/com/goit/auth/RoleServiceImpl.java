@@ -1,8 +1,6 @@
-package com.goit.service.impl;
+package com.goit.auth;
 
-import com.goit.entities.Role;
-import com.goit.repositories.RoleRepository;
-import com.goit.service.RoleService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

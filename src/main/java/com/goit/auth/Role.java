@@ -1,4 +1,4 @@
-package com.goit.entities;
+package com.goit.auth;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -1,6 +1,7 @@
 package com.goit.url;
 
-import org.apache.catalina.User;
+
+import com.goit.auth.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,7 @@ public class UrlCrudServiceImpl implements UrlCrudService {
     private UrlMapper urlMapper;
 
     @Autowired
-    private ShortUrlGeneratorUser shortUrlGenerator;
+    private ShortUrlGenerator shortUrlGenerator;
 
     @Override
     @Transactional
@@ -27,7 +28,7 @@ public class UrlCrudServiceImpl implements UrlCrudService {
             throw new IllegalArgumentException("Invalid or inaccessible URL");
         }
 
-        String shortUrl = shortUrlGenerator.generateShortUrl();
+        String shortUrl = shortUrlGenerator.generateShortUrl(user);
         Url url = urlMapper.toUrl(request, user);
         url.setShortUrl(shortUrl);
         url.setCreationDate(LocalDateTime.now());

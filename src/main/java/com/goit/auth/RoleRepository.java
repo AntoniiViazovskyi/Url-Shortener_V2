@@ -1,6 +1,5 @@
-package com.goit.repositories;
+package com.goit.auth;
 
-import com.goit.entities.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

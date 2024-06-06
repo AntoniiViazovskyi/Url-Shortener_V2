@@ -1,7 +1,6 @@
-package com.goit.config;
+package com.goit.auth;
 
 
-import com.goit.utils.JwtUtils;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

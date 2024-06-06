@@ -1,6 +1,6 @@
 package com.goit.url;
 
-import org.apache.catalina.User;
+import com.goit.auth.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

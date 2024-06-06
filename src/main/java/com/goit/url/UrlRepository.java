@@ -1,6 +1,6 @@
 package com.goit.url;
 
-import org.apache.catalina.User;
+import com.goit.auth.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

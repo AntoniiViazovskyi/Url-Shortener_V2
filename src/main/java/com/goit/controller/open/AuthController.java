@@ -1,11 +1,8 @@
 package com.goit.controller.open;
 
 
-import com.goit.dto.CreateUserDto;
-import com.goit.dto.JwtResponseDto;
-import com.goit.dto.LoginUserDto;
-import com.goit.service.UserService;
-import com.goit.utils.JwtUtils;
+
+import com.goit.auth.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,19 +30,19 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponseDto> login(@RequestBody @Valid LoginUserDto loginUserDto) {
+    public ResponseEntity<JwtResponseDto> login(@RequestBody @Valid UserDto loginUserDto) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginUserDto.getEmail(), loginUserDto.getPassword())
         );
-        String jwt = jwtUtils.generateToken(userService.findByEmail(loginUserDto.getEmail()));
+        String jwt = jwtUtils.generateToken(UserMapper.toEntity(userService.getUserByEmail(loginUserDto.getEmail())));
         return ResponseEntity.ok(new JwtResponseDto(jwt));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<JwtResponseDto> register(@RequestBody @Valid CreateUserDto createUserDto) {
-        userService.createUser(createUserDto);
-        String jwt = jwtUtils.generateToken(userService.findByEmail(createUserDto.getEmail()));
+    public ResponseEntity<JwtResponseDto> register(@RequestBody @Valid UserDto createUserDto) {
+        userService.createUser(createUserDto, createUserDto.getPassword());
+        String jwt = jwtUtils.generateToken(UserMapper.toEntity(userService.getUserByEmail(createUserDto.getEmail())));
         return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponseDto(jwt));
     }
 }

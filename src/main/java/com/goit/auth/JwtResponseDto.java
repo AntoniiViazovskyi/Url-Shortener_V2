@@ -1,4 +1,4 @@
-package com.goit.dto;
+package com.goit.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
