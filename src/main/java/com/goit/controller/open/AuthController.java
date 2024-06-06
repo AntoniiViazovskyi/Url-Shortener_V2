@@ -35,14 +35,14 @@ public class AuthController {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginUserDto.getEmail(), loginUserDto.getPassword())
         );
-        String jwt = jwtUtils.generateToken(UserMapper.toEntity(userService.getUserByEmail(loginUserDto.getEmail())));
+        String jwt = jwtUtils.generateToken(userService.findByEmail(loginUserDto.getEmail()));
         return ResponseEntity.ok(new JwtResponseDto(jwt));
     }
 
     @PostMapping("/register")
     public ResponseEntity<JwtResponseDto> register(@RequestBody @Valid UserDto createUserDto) {
         userService.createUser(createUserDto, createUserDto.getPassword());
-        String jwt = jwtUtils.generateToken(UserMapper.toEntity(userService.getUserByEmail(createUserDto.getEmail())));
+        String jwt = jwtUtils.generateToken(userService.findByEmail(createUserDto.getEmail()));
         return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponseDto(jwt));
     }
 }
