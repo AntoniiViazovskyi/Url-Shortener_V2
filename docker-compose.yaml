@@ -1,0 +1,22 @@
+#docker build -t goit-proj .
+#docker-compose up -d
+
+services:
+  goit-proj:
+    image: "goit-proj"
+    container_name: "goit-proj"
+    ports:
+      - "8080:8080"
+    links:
+      - "goit-proj-postgres"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+  goit-proj-postgres:
+    image: "postgres"
+    container_name: "goit-proj-postgres"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=url_shortener
