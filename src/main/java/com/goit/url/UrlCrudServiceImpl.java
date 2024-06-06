@@ -18,16 +18,20 @@ public class UrlCrudServiceImpl implements UrlCrudService {
     private UrlMapper urlMapper;
 
     @Autowired
-    private ShortUrlGeneratorUser shortUrlGenerator;
+    private ShortUrlGeneratorUser shortUrlGeneratorUser;
 
     @Override
     @Transactional
     public Url createShortUrl(DtoCreateUrlRequest request, User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
         if (!URLValidator.isValid(request.getLongUrl()) || !URLValidator.isAccessibleUrl(request.getLongUrl())) {
             throw new IllegalArgumentException("Invalid or inaccessible URL");
         }
 
-        String shortUrl = shortUrlGenerator.generateShortUrl();
+
+        String shortUrl = shortUrlGeneratorUser.generateShortUrl(user);
         Url url = urlMapper.toUrl(request, user);
         url.setShortUrl(shortUrl);
         url.setCreationDate(LocalDateTime.now());

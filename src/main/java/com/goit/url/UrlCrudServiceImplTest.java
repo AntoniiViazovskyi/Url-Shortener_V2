@@ -11,6 +11,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static javax.management.Query.times;
+import static jdk.internal.org.objectweb.asm.util.CheckClassAdapter.verify;
+import static jdk.jfr.internal.jfc.model.Constraint.any;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -24,7 +27,7 @@ class UrlCrudServiceImplTest {
     private UrlMapper urlMapper;
 
     @Mock
-    private ShortUrlGenerator shortUrlGenerator;
+    private ShortUrlGeneratorUser shortUrlGeneratorUser;
 
     @InjectMocks
     private UrlCrudServiceImpl urlCrudService;
@@ -50,7 +53,7 @@ class UrlCrudServiceImplTest {
 
         when(URLValidator.isValid(request.getLongUrl())).thenReturn(true);
         when(URLValidator.isAccessibleUrl(request.getLongUrl())).thenReturn(true);
-        when(shortUrlGenerator.generateShortUrl()).thenReturn("abcdefg");
+        when(shortUrlGeneratorUser.generateShortUrl(user)).thenReturn("abcdefg");
         when(urlMapper.toUrl(request, user)).thenReturn(url);
         when(urlRepository.save(any(Url.class))).thenReturn(url);
 
