@@ -3,7 +3,6 @@ package com.goit.url.V2;
 
 import com.goit.auth.User;
 import com.goit.auth.UserRepository;
-import com.goit.url.URLValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
