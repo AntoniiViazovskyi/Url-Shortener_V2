@@ -7,17 +7,13 @@ import java.util.Optional;
 
 @Service
 public interface UrlCrudService {
-    ShortURLDTO createShortURL(ShortURLDTO shortURLDTO);
+    UrlDto createURL(UrlDto urlDto);
 
-    Optional<ShortURLDTO> getShortURLById(Long id);
+    Optional<UrlDto> getURLById(Long id);
+    Optional<UrlDto> getURLByShortId(String shortId);
 
-    List<ShortURLDTO> getAllShortURLsByCreatorId(Long userId);
-
-    ShortURLDTO updateShortURL(ShortURLDTO shortURLDTO);
-
-    void deleteShortURL(Long id);
-
-    String redirectShortURL(String shortUrl);
-
-
+    List<UrlDto> getAllByUserId();
+    List<UrlDto> getAllActiveByUserId();
+    void increaseClicksCount(String shortId);
+    void deleteByShortId(String shortId);
 }

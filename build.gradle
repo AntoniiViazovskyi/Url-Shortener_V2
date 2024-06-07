@@ -48,7 +48,7 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
 	// https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations
-	implementation 'io.swagger.core.v3:swagger-annotations:2.2.22'
+//	implementation 'io.swagger.core.v3:swagger-annotations:2.2.22'
 
 }
 

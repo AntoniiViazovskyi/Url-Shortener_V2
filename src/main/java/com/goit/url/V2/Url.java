@@ -21,7 +21,7 @@ public class Url {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String shortUrl;
+    private String shortId;
 
     @Column(nullable = false)
     private String longUrl;

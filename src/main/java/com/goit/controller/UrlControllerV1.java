@@ -4,7 +4,6 @@ import com.goit.exception.exceptions.shortURLExceptions.ShortURLNotFoundExceptio
 import com.goit.response.CustomErrorResponse;
 import com.goit.response.UrlResponse;
 import com.goit.response.UrlStatsResponse;
-import com.goit.url.V2.ShortURLDTO;
 import com.goit.url.V2.UrlCrudServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
