@@ -1,10 +1,10 @@
 package com.goit.controller;
 
-import com.goit.request.auth.JwtResponse;
+import com.goit.auth.*;
 import com.goit.request.auth.LoginRequest;
+import com.goit.request.auth.SignupRequest;
 import com.goit.response.CustomErrorResponse;
 import com.goit.response.UserResponse;
-import com.goit.user.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -39,42 +39,33 @@ import java.util.stream.Collectors;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final JwtUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
     @Operation(summary = "Login user")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Login successful",
-            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = JwtResponse.class)) }),
+            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = JwtResponseDto.class)) }),
         @ApiResponse(responseCode = "4XX", description = "Login failed",
             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CustomErrorResponse.class)) })
     })
-    public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
-
+    public ResponseEntity<JwtResponseDto> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
         Authentication authentication = null;
         try {
-            authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(
-                            loginRequest.getUsername(), loginRequest.getPassword()
-                    ));
+            authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
+            );
         } catch (AuthenticationException e) {
             throw new Exception("Authentication Exception", e);
         }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails
-                .getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
+        String jwt = jwtUtils.generateToken(userService.findByEmail(loginRequest.getEmail()));
 
         return ResponseEntity
-                .ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles));
+                .ok(new JwtResponseDto(jwt));
     }
 
     @PostMapping("/register")
@@ -86,8 +77,7 @@ public class AuthController {
             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CustomErrorResponse.class)) })
     })
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws UserAlreadyExistException {
-        userService.registerUser(signUpRequest.getUsername(), signUpRequest.getEmail(),
-                signUpRequest.getPassword());
+        userService.createUser(signUpRequest.getEmail(), signUpRequest.getPassword());
         return ResponseEntity.status(201).build();
     }
 }

@@ -1,4 +1,4 @@
-package com.goit.temp.url;
+package com.goit.url;
 
 import com.goit.auth.User;
 import org.springframework.data.jpa.repository.JpaRepository;

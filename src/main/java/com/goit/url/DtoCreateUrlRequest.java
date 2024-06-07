@@ -1,4 +1,4 @@
-package com.goit.temp.url;
+package com.goit.url;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

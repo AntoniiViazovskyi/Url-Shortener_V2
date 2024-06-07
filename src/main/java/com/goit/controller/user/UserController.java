@@ -1,4 +1,4 @@
-package com.goit.temp.controller.user;
+package com.goit.controller.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.goit.temp.controller.open;
+package com.goit.controller.open;
 
 
 

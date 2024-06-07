@@ -1,4 +1,4 @@
-package com.goit.temp.controller.admin;
+package com.goit.controller.admin;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,11 +1,11 @@
 package com.goit.controller;
 
+import com.goit.auth.UserMapper;
 import com.goit.request.CreateShortUrlRequest;
 import com.goit.response.CustomErrorResponse;
 import com.goit.response.UrlResponse;
 import com.goit.response.UrlStatsResponse;
 import com.goit.url.UrlCrudServiceImpl;
-import com.goit.user.UserMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

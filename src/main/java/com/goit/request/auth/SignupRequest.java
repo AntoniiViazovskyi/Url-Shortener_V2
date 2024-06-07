@@ -11,10 +11,6 @@ import lombok.Setter;
 public class SignupRequest {
 
     @NotBlank
-    @Size(min = 3, max = 100)
-    private String username;
-
-    @NotBlank
     @Email
     private String email;
 

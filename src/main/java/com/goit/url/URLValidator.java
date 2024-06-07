@@ -1,4 +1,4 @@
-package com.goit.temp.url;
+package com.goit.url;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

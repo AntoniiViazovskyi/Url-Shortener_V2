@@ -5,6 +5,7 @@ import java.util.List;
 public interface UserService {
 
     UserDto createUser(UserDto userDTO, String rawPassword);
+    UserDto createUser(String email, String rawPassword);
     UserDto getUserById(Long id);
     List<UserDto> getAllUsers();
     User findByEmail(String email);

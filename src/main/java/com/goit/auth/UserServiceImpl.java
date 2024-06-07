@@ -38,6 +38,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return UserMapper.toDTO(savedUser);
     }
 
+    public UserDto createUser(String email, String rawPassword) {
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(rawPassword));
+        user.setRoles(List.of(roleService.findByName("ROLE_USER")));
+        User savedUser = userRepository.save(user);
+        return UserMapper.toDTO(savedUser);
+    }
+
     // Read
     public UserDto getUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
