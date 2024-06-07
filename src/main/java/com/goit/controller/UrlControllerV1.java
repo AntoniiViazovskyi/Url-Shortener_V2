@@ -16,12 +16,14 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.Duration;
 import java.util.List;
 
 @Slf4j
@@ -33,6 +35,8 @@ public class UrlControllerV1 {
 
     private final UrlCrudServiceImpl urlService;
     private final UserMapper urlMapper;
+    @Value("${app.domain}")
+    private String appDomain;
 
     @GetMapping("")
     @Operation(summary = "Get all urls")
@@ -96,10 +100,11 @@ public class UrlControllerV1 {
     })
     @SecurityRequirement(name = "BearerAuth")
     public ResponseEntity<UrlResponse> createNote(@Valid @NotNull @RequestBody CreateShortUrlRequest request, Principal principal) {
-        UrlResponse shortedUrl = urlService.add(request, principal.getUsername());
+        UrlResponse urlResponse = urlService.add(request, principal.getUsername());
+        urlResponse.setShortUrl(String.format("%s/%s", appDomain, urlResponse.getShortId()));
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(shortedUrl);
+                .body(urlResponse);
     }
 
 

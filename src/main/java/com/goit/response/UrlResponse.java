@@ -15,6 +15,7 @@ public class UrlResponse {
     private Long id;
     private String userId;
     private String shortId;
+    private String shortUrl;
     private String longUrl;
     private int click_count;
     private Date created_at;
