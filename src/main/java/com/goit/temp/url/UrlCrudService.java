@@ -1,7 +1,6 @@
-package com.goit.url;
+package com.goit.temp.url;
 
 import com.goit.auth.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.goit.url;
+package com.goit.temp.url;
 
 import com.goit.auth.User;
 import jakarta.persistence.*;
