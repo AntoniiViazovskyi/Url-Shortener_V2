@@ -1,4 +1,4 @@
-package com.goit.service.exception.exceptions.userExceptions;
+package com.goit.exception.exceptions.userExceptions;
 
 public class UserIncorrectPasswordException extends Exception{
     private static final String USER_INCORRECT_PASSWORD_EXCEPTION_TEXT =

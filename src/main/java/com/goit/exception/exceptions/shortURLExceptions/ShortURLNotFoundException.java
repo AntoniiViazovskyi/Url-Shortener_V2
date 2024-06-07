@@ -1,4 +1,4 @@
-package com.goit.service.exception.exceptions.shortURLExceptions;
+package com.goit.exception.exceptions.shortURLExceptions;
 
 public class ShortURLNotFoundException extends Exception{
     private static final String SHORT_URL_NOT_FOUND_EXCEPTION_TEXT = "Short url with id = %s not found.";

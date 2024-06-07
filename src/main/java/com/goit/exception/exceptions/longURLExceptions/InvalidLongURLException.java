@@ -1,4 +1,4 @@
-package com.goit.service.exception.exceptions.longURLExceptions;
+package com.goit.exception.exceptions.longURLExceptions;
 
 public class InvalidLongURLException extends Exception{
     private static final String INCORRECT_FORMAT = """

@@ -1,4 +1,4 @@
-package com.goit.service.exception.exceptions.shortURLExceptions;
+package com.goit.exception.exceptions.shortURLExceptions;
 
 public class ShortURLAlreadyExistException extends Exception{
     private static final String SHORT_URL_ALREADY_EXIST_BY_ID = "Short URL with id = %s already exist.";

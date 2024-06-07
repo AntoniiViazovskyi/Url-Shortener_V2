@@ -1,14 +1,13 @@
-package com.goit.service.exception;
+package com.goit.exception;
 
-import com.goit.service.exception.exceptions.generalExceptions.UnauthorizedAccessException;
-import com.goit.service.exception.exceptions.longURLExceptions.InvalidLongURLException;
-import com.goit.service.exception.exceptions.longURLExceptions.LongURLAlreadyExistException;
-import com.goit.service.exception.exceptions.longURLExceptions.NotValidLongURLException;
-import com.goit.service.exception.exceptions.shortURLExceptions.ShortURLAlreadyExistException;
-import com.goit.service.exception.exceptions.shortURLExceptions.ShortURLHasExpired;
-import com.goit.service.exception.exceptions.shortURLExceptions.ShortURLRedirectionException;
-import com.goit.service.exception.exceptions.userExceptions.UserAlreadyExistException;
-import com.goit.service.exception.exceptions.userExceptions.UserIncorrectPasswordException;
+import com.goit.exception.exceptions.generalExceptions.UnauthorizedAccessException;
+import com.goit.exception.exceptions.longURLExceptions.InvalidLongURLException;
+import com.goit.exception.exceptions.longURLExceptions.LongURLAlreadyExistException;
+import com.goit.exception.exceptions.longURLExceptions.NotValidLongURLException;
+import com.goit.exception.exceptions.shortURLExceptions.ShortURLAlreadyExistException;
+import com.goit.exception.exceptions.shortURLExceptions.ShortURLHasExpired;
+import com.goit.exception.exceptions.shortURLExceptions.ShortURLRedirectionException;
+import com.goit.exception.exceptions.userExceptions.UserIncorrectPasswordException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,23 +31,23 @@ public class GlobalExceptionHandler {
 
     /* Common exceptions */
 
-    @ExceptionHandler(value = {
-            UserAlreadyExistException.class,
-            LongURLAlreadyExistException.class,
-            ShortURLAlreadyExistException.class
-    })
-    public ResponseEntity<Map<String, List<String>>> user_LongUrl_ShortURLAlreadyExistException(Exception e) {
-        return getErrorsMap(e, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(value = {
-            UserAlreadyExistException.class,
-            LongURLAlreadyExistException.class,
-            ShortURLAlreadyExistException.class
-    })
-    public ResponseEntity<Map<String, List<String>>> user_LongUrl_ShortURLNotFoundException(Exception e) {
-        return getErrorsMap(e, HttpStatus.NOT_FOUND);
-    }
+//    @ExceptionHandler(value = {
+//            UserAlreadyExistException.class,
+//            LongURLAlreadyExistException.class,
+//            ShortURLAlreadyExistException.class
+//    })
+//    public ResponseEntity<Map<String, List<String>>> user_LongUrl_ShortURLAlreadyExistException(Exception e) {
+//        return getErrorsMap(e, HttpStatus.BAD_REQUEST);
+//    }
+//
+//    @ExceptionHandler(value = {
+//            UserAlreadyExistException.class,
+//            LongURLAlreadyExistException.class,
+//            ShortURLAlreadyExistException.class
+//    })
+//    public ResponseEntity<Map<String, List<String>>> user_LongUrl_ShortURLNotFoundException(Exception e) {
+//        return getErrorsMap(e, HttpStatus.NOT_FOUND);
+//    }
 
     /* User exceptions */
 

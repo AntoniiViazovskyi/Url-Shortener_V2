@@ -1,4 +1,4 @@
-package com.goit.service.exception.exceptions.generalExceptions;
+package com.goit.exception.exceptions.generalExceptions;
 
 import java.util.List;
 

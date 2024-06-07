@@ -1,4 +1,4 @@
-package com.goit.service.exception.exceptions.longURLExceptions;
+package com.goit.exception.exceptions.longURLExceptions;
 
 public class LongURLNotFoundException extends Exception{
     private static final String LONG_URL_NOT_FOUND_EXCEPTION_TEXT = "Long url with id = %s not found.";

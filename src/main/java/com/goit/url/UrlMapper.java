@@ -1,6 +1,7 @@
 package com.goit.url;
 
 import com.goit.auth.User;
+import com.goit.url.V2.Url;
 import org.springframework.stereotype.Component;
 
 @Component

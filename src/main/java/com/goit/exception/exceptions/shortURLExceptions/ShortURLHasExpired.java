@@ -1,4 +1,4 @@
-package com.goit.service.exception.exceptions.shortURLExceptions;
+package com.goit.exception.exceptions.shortURLExceptions;
 
 import java.time.LocalDate;
 

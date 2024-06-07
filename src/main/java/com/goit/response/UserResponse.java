@@ -1,8 +1,8 @@
 package com.goit.response;
 
+import com.goit.auth.Role;
 import lombok.Getter;
 import lombok.Setter;
-import org.springtest.data.entity.Role;
 
 import java.util.HashSet;
 import java.util.Set;

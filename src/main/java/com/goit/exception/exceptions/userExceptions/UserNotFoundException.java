@@ -1,4 +1,4 @@
-package com.goit.service.exception.exceptions.userExceptions;
+package com.goit.exception.exceptions.userExceptions;
 
 public class UserNotFoundException extends Exception{
     private static final String USER_NOT_FOUND_EXCEPTION_TEXT = "User with username = %s not found.";

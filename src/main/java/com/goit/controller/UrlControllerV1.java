@@ -1,11 +1,13 @@
 package com.goit.controller;
 
 import com.goit.auth.UserMapper;
-import com.goit.request.CreateShortUrlRequest;
+import com.goit.exception.exceptions.shortURLExceptions.ShortURLNotFoundException;
 import com.goit.response.CustomErrorResponse;
 import com.goit.response.UrlResponse;
 import com.goit.response.UrlStatsResponse;
-import com.goit.url.UrlCrudServiceImpl;
+import com.goit.url.DtoCreateUrlRequest;
+import com.goit.url.V2.ShortURLDTO;
+import com.goit.url.V2.UrlCrudServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,8 +25,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Validated
@@ -34,7 +36,7 @@ import java.util.List;
 public class UrlControllerV1 {
 
     private final UrlCrudServiceImpl urlService;
-    private final UserMapper urlMapper;
+
     @Value("${app.domain}")
     private String appDomain;
 
@@ -46,10 +48,10 @@ public class UrlControllerV1 {
                             schema = @Schema(implementation = UrlResponse.class)) })
     })
     @SecurityRequirement(name = "BearerAuth")
-    public ResponseEntity<List<UrlResponse>> urlList(Principal principal) {
+    public ResponseEntity<List<ShortURLDTO>> urlList() {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(urlService.listAll(principal.getName()));
+            .body(urlService.getAllShortURLsByCreator());
 }
 
     @GetMapping("/active")
@@ -64,10 +66,11 @@ public class UrlControllerV1 {
 
     })
     @SecurityRequirement(name = "BearerAuth")
-    public ResponseEntity<List<UrlResponse>> getUrlsByStatus(String shortId, Principal principal) {
+    public ResponseEntity<String> getUrlsByStatus(String shortId, Principal principal) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(urlService.listActive(principal.getName()));
+                .body("test");
+                //.body(urlService.listActive(principal.getName()));
     }
 
     @GetMapping("/{shortId}/stats")
@@ -82,10 +85,10 @@ public class UrlControllerV1 {
 
     })
     @SecurityRequirement(name = "BearerAuth")
-    public ResponseEntity<UrlStatsResponse> getUrlStatsByShort(String shortId, Principal principal) {
+    public ResponseEntity<Optional<ShortURLDTO>> getUrlStatsByShort(String shortId, Principal principal) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(urlService.getOne(shortId, principal.getName()));
+                .body(urlService.getShortURLById(Long.valueOf(shortId)));
     }
 
     @PostMapping("/create")
@@ -99,12 +102,12 @@ public class UrlControllerV1 {
                             schema = @Schema(implementation = CustomErrorResponse.class))})
     })
     @SecurityRequirement(name = "BearerAuth")
-    public ResponseEntity<UrlResponse> createNote(@Valid @NotNull @RequestBody CreateShortUrlRequest request, Principal principal) {
-        UrlResponse urlResponse = urlService.add(request, principal.getName());
-        urlResponse.setShortUrl(String.format("%s/%s", appDomain, urlResponse.getShortId()));
+    public ResponseEntity<ShortURLDTO> createNote(@Valid @NotNull @RequestBody ShortURLDTO request) {
+        ShortURLDTO shortUrl = urlService.createShortURL(request);
+        shortUrl.setShortURL(String.format("%s/%s", appDomain, shortUrl.getId()));
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(urlResponse);
+                .body(shortUrl);
     }
 
 
@@ -117,8 +120,8 @@ public class UrlControllerV1 {
                             schema = @Schema(implementation = CustomErrorResponse.class)) }) })
     @ResponseStatus(HttpStatus.OK)
     @SecurityRequirement(name = "BearerAuth")
-    public void deleteUrlByShortId(@PathVariable("shortId") String  shortId, Principal principal) throws UrlNotFoundException {
+    public void deleteUrlByShortId(@PathVariable("shortId") String  shortId, Principal principal) throws ShortURLNotFoundException {
 
-        urlService.deleteByShortId(shortId, principal.getName());
+        urlService.deleteShortURL(Long.valueOf(shortId));
     }
 }

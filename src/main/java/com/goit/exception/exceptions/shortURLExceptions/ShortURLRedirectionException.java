@@ -1,4 +1,4 @@
-package com.goit.service.exception.exceptions.shortURLExceptions;
+package com.goit.exception.exceptions.shortURLExceptions;
 
 public class ShortURLRedirectionException extends Exception{
     private static final String CANNOT_REDIRECT = "Cannot redirect. Check the validity of the data";

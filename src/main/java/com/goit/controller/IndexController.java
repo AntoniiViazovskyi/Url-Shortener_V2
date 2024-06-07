@@ -1,13 +1,16 @@
 package com.goit.controller;
 
-import com.goit.url.Url;
-import com.goit.url.UrlCrudService;
+import com.goit.exception.GlobalExceptionHandler;
+import com.goit.exception.exceptions.shortURLExceptions.ShortURLNotFoundException;
+import com.goit.url.V2.ShortURLDTO;
+import com.goit.url.V2.UrlCrudService;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -15,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class IndexController {
 
     private final UrlCrudService urlCrudService;
+    private final GlobalExceptionHandler globalExceptionHandler;
 
     @GetMapping("")
     public ModelAndView index() {
@@ -22,13 +26,13 @@ public class IndexController {
     }
 
     @GetMapping("/shortId")
-    public ModelAndView getNoteById(@NotBlank @PathVariable("shortId") String shortId) throws UrlNotFoundException {
+    public ModelAndView getNoteById(@NotBlank @PathVariable("shortId") String shortId) throws ShortURLNotFoundException {
         // в запросе учитывать активность урла
-        Url url = urlCrudService.getByShortId(shortId);
+        Optional<ShortURLDTO> url = urlCrudService.getShortURLById(Long.valueOf(shortId));
 
-        if (url == null) throw  new UrlNotFoundException();
+        if (url == null) throw  new ShortURLNotFoundException();
 
-        urlCrudService.incrementClickCount(shortId);
-        return new ModelAndView("redirect:" + url.getLongUrl());
+        //urlCrudService.incrementClickCount(shortId);
+        return new ModelAndView("redirect:" + url.get().getLongURL());
     }
 }

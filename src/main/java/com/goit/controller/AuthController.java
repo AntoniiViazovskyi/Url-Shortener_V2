@@ -1,6 +1,7 @@
 package com.goit.controller;
 
 import com.goit.auth.*;
+import com.goit.exception.GlobalExceptionHandler;
 import com.goit.request.auth.LoginRequest;
 import com.goit.request.auth.SignupRequest;
 import com.goit.response.CustomErrorResponse;
@@ -42,6 +43,7 @@ public class AuthController {
     private final UserService userService;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
+    private final GlobalExceptionHandler globalExceptionHandler;
 
     @PostMapping("/login")
     @Operation(summary = "Login user")
@@ -76,7 +78,7 @@ public class AuthController {
         @ApiResponse(responseCode = "4XX", description = "Registration failed",
             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CustomErrorResponse.class)) })
     })
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws UserAlreadyExistException {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         userService.createUser(signUpRequest.getEmail(), signUpRequest.getPassword());
         return ResponseEntity.status(201).build();
     }

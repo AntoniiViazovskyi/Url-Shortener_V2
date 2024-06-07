@@ -1,4 +1,4 @@
-package com.goit.service.exception.exceptions.longURLExceptions;
+package com.goit.exception.exceptions.longURLExceptions;
 
 public class LongURLAlreadyExistException extends Exception{
     private static final String LONG_URL_ALREADY_EXIST_BY_ID = "Long URL with id = %s already exist.";
