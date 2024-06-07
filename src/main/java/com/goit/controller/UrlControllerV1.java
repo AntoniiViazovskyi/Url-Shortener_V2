@@ -49,7 +49,7 @@ public class UrlControllerV1 {
     public ResponseEntity<List<UrlResponse>> urlList(Principal principal) {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(urlService.listAll(principal.getUsername()));
+            .body(urlService.listAll(principal.getName()));
 }
 
     @GetMapping("/active")
@@ -64,10 +64,10 @@ public class UrlControllerV1 {
 
     })
     @SecurityRequirement(name = "BearerAuth")
-    public ResponseEntity<List<UrlResponse>> getUrlsByStatus(String shortId) {
+    public ResponseEntity<List<UrlResponse>> getUrlsByStatus(String shortId, Principal principal) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(urlService.listActive(principal.getUsername()));
+                .body(urlService.listActive(principal.getName()));
     }
 
     @GetMapping("/{shortId}/stats")
@@ -82,10 +82,10 @@ public class UrlControllerV1 {
 
     })
     @SecurityRequirement(name = "BearerAuth")
-    public ResponseEntity<UrlStatsResponse> getUrlStatsByShort(String shortId) {
+    public ResponseEntity<UrlStatsResponse> getUrlStatsByShort(String shortId, Principal principal) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(urlService.getOne(shortId, principal.getUsername()));
+                .body(urlService.getOne(shortId, principal.getName()));
     }
 
     @PostMapping("/create")
@@ -100,7 +100,7 @@ public class UrlControllerV1 {
     })
     @SecurityRequirement(name = "BearerAuth")
     public ResponseEntity<UrlResponse> createNote(@Valid @NotNull @RequestBody CreateShortUrlRequest request, Principal principal) {
-        UrlResponse urlResponse = urlService.add(request, principal.getUsername());
+        UrlResponse urlResponse = urlService.add(request, principal.getName());
         urlResponse.setShortUrl(String.format("%s/%s", appDomain, urlResponse.getShortId()));
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -119,6 +119,6 @@ public class UrlControllerV1 {
     @SecurityRequirement(name = "BearerAuth")
     public void deleteUrlByShortId(@PathVariable("shortId") String  shortId, Principal principal) throws UrlNotFoundException {
 
-        urlService.deleteByShortId(shortId, principal.getUsername());
+        urlService.deleteByShortId(shortId, principal.getName());
     }
 }
