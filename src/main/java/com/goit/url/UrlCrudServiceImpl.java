@@ -27,7 +27,7 @@ public class UrlCrudServiceImpl implements UrlCrudService {
             throw new IllegalArgumentException("Invalid or inaccessible URL");
         }
 
-        String shortUrl = shortUrlGenerator.generateShortUrl();
+        String shortUrl = shortUrlGenerator.generateShortUrl(user);
         Url url = urlMapper.toUrl(request, user);
         url.setShortUrl(shortUrl);
         url.setCreationDate(LocalDateTime.now());
