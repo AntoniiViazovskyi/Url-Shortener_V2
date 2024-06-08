@@ -1,6 +1,6 @@
 package com.goit.exception.exceptions.longURLExceptions;
 
-public class InvalidLongURLException extends Exception{
+public class InvalidLongURLException extends RuntimeException{
     private static final String INCORRECT_FORMAT = """
             Your URL isn't in the correct format.
             Url must be structured like this:

@@ -2,6 +2,7 @@ package com.goit.controller;
 
 import com.goit.auth.*;
 import com.goit.exception.GlobalExceptionHandler;
+import com.goit.exception.LogEnum;
 import com.goit.request.auth.LoginRequest;
 import com.goit.request.auth.SignupRequest;
 import com.goit.response.CustomErrorResponse;
@@ -58,8 +59,10 @@ public class AuthController {
         }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateToken(userService.getByEmail(loginRequest.getEmail()));
+        User user = userService.getByEmail(loginRequest.getEmail());
+        String jwt = jwtUtils.generateToken(user);
 
+        log.info(String.format("%s User %s has accomplished authentication process", LogEnum.CONTROLLER, user));
         return ResponseEntity.ok(new JwtResponseDto(jwt));
     }
 
@@ -72,7 +75,9 @@ public class AuthController {
             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CustomErrorResponse.class)) })
     })
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-        userService.createUser(signUpRequest.getEmail(), signUpRequest.getPassword());
+        UserDto user = userService.createUser(signUpRequest.getEmail(), signUpRequest.getPassword());
+
+        log.info(String.format("%s User %s has accomplished registration process", LogEnum.CONTROLLER, user));
         return ResponseEntity.status(201).build();
     }
 }

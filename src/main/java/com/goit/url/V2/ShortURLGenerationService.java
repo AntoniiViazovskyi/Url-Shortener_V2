@@ -1,11 +1,14 @@
 package com.goit.url.V2;
 
 import com.goit.auth.User;
+import com.goit.exception.LogEnum;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class ShortURLGenerationService {
 
@@ -25,6 +28,7 @@ public class ShortURLGenerationService {
 
         String shortUrl = userHexId + maxIdHex;
 
+        log.info(String.format("%s short url for user %s was created", LogEnum.SERVICE, user));
         return shortUrl.replaceAll("^0[xX]+", "");
     }
 
