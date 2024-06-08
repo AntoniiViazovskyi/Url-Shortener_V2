@@ -21,5 +21,5 @@ public class UrlDto {
     private String longURL;
     private LocalDateTime creationDate;
     private LocalDateTime expiryDate;
-    private Long clickCount;
+    private int clickCount;
 }

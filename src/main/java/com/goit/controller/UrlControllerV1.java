@@ -1,10 +1,15 @@
 package com.goit.controller;
 
+import com.goit.auth.User;
+import com.goit.auth.UserServiceImpl;
 import com.goit.exception.exceptions.shortURLExceptions.ShortURLNotFoundException;
 import com.goit.response.CustomErrorResponse;
 import com.goit.response.UrlResponse;
 import com.goit.response.UrlStatsResponse;
+import com.goit.url.V2.Url;
 import com.goit.url.V2.UrlCrudServiceImpl;
+import com.goit.url.V2.UrlDto;
+import com.goit.url.V2.UrlMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,6 +38,8 @@ import java.util.Optional;
 public class UrlControllerV1 {
 
     private final UrlCrudServiceImpl urlService;
+    private final UrlMapper urlMapper;
+    private final UserServiceImpl userService;
 
     @Value("${app.domain}")
     private String appDomain;
@@ -45,10 +52,12 @@ public class UrlControllerV1 {
                             schema = @Schema(implementation = UrlResponse.class)) })
     })
     @SecurityRequirement(name = "BearerAuth")
-    public ResponseEntity<List<ShortURLDTO>> urlList() {
+    public ResponseEntity<List<UrlResponse>> urlList(Principal principal) {
+        User user = userService.getUserWithAllUrls(principal.getName());
+        List<UrlResponse> urls = urlMapper.toUtlResponseList(user.getUrls());
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(urlService.getAllShortURLsByCreator());
+            .body(urls);
 }
 
     @GetMapping("/active")
@@ -63,11 +72,12 @@ public class UrlControllerV1 {
 
     })
     @SecurityRequirement(name = "BearerAuth")
-    public ResponseEntity<String> getUrlsByStatus(String shortId, Principal principal) {
+    public ResponseEntity<List<UrlResponse>> getActiveUrls(Principal principal) {
+        User user = userService.getUserWithActiveUrls(principal.getName());
+        List<UrlResponse> urls = urlMapper.toUtlResponseList(user.getUrls());
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body("test");
-                //.body(urlService.listActive(principal.getName()));
+                .body(urls);
     }
 
     @GetMapping("/{shortId}/stats")
@@ -82,7 +92,9 @@ public class UrlControllerV1 {
 
     })
     @SecurityRequirement(name = "BearerAuth")
-    public ResponseEntity<Optional<ShortURLDTO>> getUrlStatsByShort(String shortId, Principal principal) {
+    public ResponseEntity<UrlStatsResponse> getUrlStatsByShort(String shortId, Principal principal) {
+        User user = userService.getUserWithActiveUrls(principal.getName());
+        List<UrlResponse> urls = urlMapper.toUtlResponseList(user.getUrls());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(urlService.getShortURLById(Long.valueOf(shortId)));

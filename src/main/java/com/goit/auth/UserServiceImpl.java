@@ -1,5 +1,7 @@
 package com.goit.auth;
 
+import com.goit.url.V2.Url;
+import com.goit.url.V2.UrlRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserDetailsService, UserService {
 
     private final UserRepository userRepository;
+    private final UrlRepository urlRepository;
     private final RoleService roleService;
 
     private PasswordEncoder passwordEncoder;
@@ -59,8 +62,25 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 .collect(Collectors.toList());
     }
 
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", email)));
+    public User getByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() ->
+                new UsernameNotFoundException(String.format("User '%s' not found", email)));
+    }
+
+    public User getUserWithActiveUrls(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() ->
+                new UsernameNotFoundException(String.format("User '%s' not found", email)));
+        List<Url> activeUrls = urlRepository.findAllActiveByUserId(user.getId());
+        user.setUrls(activeUrls);
+        return user;
+    }
+
+    public User getUserWithAllUrls(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() ->
+                new UsernameNotFoundException(String.format("User '%s' not found", email)));
+        List<Url> urls = urlRepository.findAllByUserId(user.getId());
+        user.setUrls(urls);
+        return user;
     }
 
     // Update
@@ -92,7 +112,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = findByEmail(email);
+        User user = getByEmail(email);
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),

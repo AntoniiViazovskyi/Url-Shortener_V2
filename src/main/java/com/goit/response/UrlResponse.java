@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -13,11 +14,10 @@ import java.util.UUID;
 public class UrlResponse {
 
     private Long id;
-    private String userId;
+    private Long userId;
     private String shortId;
-    private String shortUrl;
     private String longUrl;
-    private int click_count;
-    private Date created_at;
-    private Date expiration_at;
+    private LocalDateTime creationDate;
+    private LocalDateTime expiryDate;
+    private int clickCount;
 }

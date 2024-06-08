@@ -13,8 +13,10 @@ public interface UrlRepository extends JpaRepository<Url, Long> {
     Optional<Url> findById(Long id);
     Optional<Url> findByShortId(String shortId);
     List<Url> findAllByUserId(Long userId);
-    @Query(value = "SELECT * FROM urls WHERE expiry_date > NOW()", nativeQuery = true)
-    List<Url> findAllActiveByUserId(Long userId);
+//    @Query(value = "SELECT * FROM urls WHERE expiry_date > NOW()", nativeQuery = true)
+//    List<Url> findAllActiveByUserId(Long userId);
+    @Query("SELECT u FROM Url u WHERE u.user.id = :userId AND u.expiryDate > NOW()")
+    List<Url> findAllActiveByUserId(@Param("userId") Long userId);
 
     @Query(value = "SELECT MAX(id) FROM urls", nativeQuery = true)
     Optional<Long> getMaxId();
