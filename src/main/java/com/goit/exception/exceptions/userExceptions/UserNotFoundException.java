@@ -1,6 +1,7 @@
 package com.goit.exception.exceptions.userExceptions;
 
 public class UserNotFoundException extends RuntimeException{
+    private static final String USER_NOT_FOUND_EXCEPTION_TEXT = "User not found";
     private static final String USER_WITH_USERNAME_NOT_FOUND_EXCEPTION_TEXT = "User with username/email = %s not found.";
     private static final String USER_WITH_ID_NOT_FOUND_EXCEPTION_TEXT = "User with id = %s not found.";
 
