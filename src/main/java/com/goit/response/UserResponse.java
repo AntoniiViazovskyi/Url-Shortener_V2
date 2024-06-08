@@ -12,7 +12,6 @@ import java.util.Set;
 public class UserResponse {
 
     private Long id;
-    private String username;
     private String email;
     private Set<Role> roles = new HashSet<>();
 }

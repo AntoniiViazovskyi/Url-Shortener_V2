@@ -20,20 +20,20 @@ public class Url {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String shortUrl;
+    @Column(name = "short_id", nullable = false, unique = true)
+    private String shortId;
 
-    @Column(nullable = false)
+    @Column(name = "long_url", nullable = false)
     private String longUrl;
 
-    @Column(nullable = false)
+    @Column(name = "creation_date", nullable = false)
     private LocalDateTime creationDate;
 
-    @Column(nullable = false)
+    @Column(name = "expiry_date", nullable = false)
     private LocalDateTime expiryDate;
 
-    @Column(nullable = false)
-    private Long clickCount;
+    @Column(name = "click_count", nullable = false)
+    private int clickCount;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

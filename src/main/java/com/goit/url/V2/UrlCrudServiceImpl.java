@@ -3,7 +3,8 @@ package com.goit.url.V2;
 
 import com.goit.auth.User;
 import com.goit.auth.UserRepository;
-import lombok.AllArgsConstructor;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,85 +14,84 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class UrlCrudServiceImpl implements UrlCrudService {
 
-    private final ShortURLRepository shortURLRepository;
-    private final ShortURLMapper shortURLMapper;
+    private final UrlRepository urlRepository;
+    private final UrlMapper urlMapper;
     private final ShortURLGenerationService shortURLGenerationService;
     private UserRepository userRepository;
 
 
     @Override
-    public ShortURLDTO createShortURL(ShortURLDTO shortURLDTO) {
-        if (!URLValidator.isValid(shortURLDTO.getLongURL()) || !URLValidator.isAccessibleUrl(shortURLDTO.getLongURL())) {
+    public UrlDto createURL(UrlDto urlDto) {
+        if (!URLValidator.isValid(urlDto.getLongURL()) || !URLValidator.isAccessibleUrl(urlDto.getLongURL())) {
             throw new IllegalArgumentException("Invalid long URL");
         }
 
-        String generatedShortURL = shortURLGenerationService.generateShortURL(shortURLDTO.getCreator());
-        shortURLDTO.setUrl(generatedShortURL);
+        String generatedShortURL = shortURLGenerationService.generateShortURL(urlDto.getUser());
+        urlDto.setShortId(generatedShortURL);
 
-        ShortURL shortURL = shortURLMapper.toEntity(shortURLDTO);
-        ShortURL savedShortURL = shortURLRepository.save(shortURL);
+        Url url = urlMapper.toEntity(urlDto);
+        Url savedUrl = urlRepository.save(url);
 
-        return shortURLMapper.toDTO(savedShortURL);
+        return urlMapper.toDTO(savedUrl);
     }
 
     @Override
-    public Optional<ShortURLDTO> getShortURLById(Long id) {
-        return shortURLRepository.findById(id).map(shortURLMapper::toDTO);
+    public Optional<UrlDto> getURLByShortId(String shortId) {
+        return urlRepository.findByShortId(shortId).map(urlMapper::toDTO);
     }
 
     @Override
-    public List<ShortURLDTO> getAllShortURLsByCreatorId(Long userId) {
-        return shortURLRepository.findAllByCreatorId(userId)
-                .stream()
-                .map(shortURLMapper::toDTO)
-                .collect(Collectors.toList());
+    public Optional<UrlDto> getURLByShortIdAndUser(String shortId, User user) {
+        return urlRepository.findByShortIdAndUser(shortId, user).map(urlMapper::toDTO);
     }
 
-    public List<ShortURLDTO> getAllShortURLsByCreator() {
+    @Override
+    public Optional<UrlDto> getURLById(Long id) {
+        return urlRepository.findById(id).map(urlMapper::toDTO);
+    }
+
+    @Override
+    public List<UrlDto> getAllByUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getPrincipal().toString();
 
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", email)));
+        User user = userRepository.findByEmail(email).orElseThrow(() ->
+                new UsernameNotFoundException(String.format("User '%s' not found", email)));
 
-        return shortURLRepository.findAllByCreatorId(user.getId())
+        return urlRepository.findAllByUserId(user.getId())
                 .stream()
-                .map(shortURLMapper::toDTO)
+                .map(urlMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ShortURLDTO updateShortURL(ShortURLDTO shortURLDTO) {
-        if (shortURLDTO.getId() == null) {
-            throw new IllegalArgumentException("Short URL ID cannot be null");
-        }
+    public List<UrlDto> getAllActiveByUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getPrincipal().toString();
 
-        ShortURL shortURL = shortURLMapper.toEntity(shortURLDTO);
-        ShortURL updatedShortURL = shortURLRepository.save(shortURL);
+        User user = userRepository.findByEmail(email).orElseThrow(() ->
+                new UsernameNotFoundException(String.format("User '%s' not found", email)));
 
-        return shortURLMapper.toDTO(updatedShortURL);
+        return urlRepository.findAllActiveByUserId(user.getId())
+                .stream()
+                .map(urlMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void deleteShortURL(Long id) {
-        shortURLRepository.deleteById(id);
+    @Transactional
+    public void increaseClicksCount(String shortId) {
+        urlRepository.incClicksCount(shortId);
     }
 
     @Override
-    public String redirectShortURL(String shortUrl) {
-        Optional<ShortURL> optionalShortURL = shortURLRepository.findByUrl(shortUrl);
-        if (optionalShortURL.isEmpty()) {
-            throw new IllegalArgumentException("Short URL not found");
-        }
-
-        ShortURL shortURL = optionalShortURL.get();
-        shortURL.setClickCount(shortURL.getClickCount() + 1);
-        shortURLRepository.save(shortURL);
-
-        return shortURL.getLongURL();
+    @Transactional
+    public void deleteByShortIdAndUser(String shortId, User user) {
+        urlRepository.deleteUrlByShortIdAndUser(shortId, user);
     }
 }
 

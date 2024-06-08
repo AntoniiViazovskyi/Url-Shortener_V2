@@ -8,7 +8,7 @@ public interface UserService {
     UserDto createUser(String email, String rawPassword);
     UserDto getUserById(Long id);
     List<UserDto> getAllUsers();
-    User findByEmail(String email);
+    User getByEmail(String email);
     UserDto updateUser(Long id, UserDto userDto);
     boolean deleteUser(Long id);
     boolean existsByEmail(String email);

@@ -9,15 +9,15 @@ import java.util.Optional;
 @Service
 public class ShortURLGenerationService {
 
-    private final ShortURLRepository shortURLRepository;
+    private final UrlRepository urlRepository;
 
     @Autowired
-    public ShortURLGenerationService(ShortURLRepository shortURLRepository) {
-        this.shortURLRepository = shortURLRepository;
+    public ShortURLGenerationService(UrlRepository urlRepository) {
+        this.urlRepository = urlRepository;
     }
 
     public String generateShortURL(User user) {
-        Optional<Long> maxIdOptional = shortURLRepository.getMaxId();
+        Optional<Long> maxIdOptional = urlRepository.getMaxId();
         long maxId = maxIdOptional.orElse(0L) + 1;
 
         String userHexId = Long.toHexString(user.getId());

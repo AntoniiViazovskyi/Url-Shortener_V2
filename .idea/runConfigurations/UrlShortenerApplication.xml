@@ -1,0 +1,24 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="UrlShortenerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" />
+    <envs>
+      <env name="POSTGRES_DB_USERNAME" value="postgres" />
+      <env name="POSTGRES_DB_PASSWORD" value="1234" />
+      <env name="POSTGRES_DB_NAME" value="url_shortener" />
+      <env name="POSTGRES_DB_LOCAL_PORT" value="5433" />
+      <env name="POSTGRES_DB_DOCKER_PORT" value="5432" />
+      <env name="SPRING_LOCAL_PORT" value="8080" />
+      <env name="SPRING_DOCKER_PORT" value="9999" />
+    </envs>
+    <module name="Url-Shortener.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.goit.UrlShortenerApplication" />
+    <extension name="software.aws.toolkits.jetbrains.core.execution.JavaAwsConnectionExtension">
+      <option name="credential" />
+      <option name="region" />
+      <option name="useCurrentConnection" value="false" />
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

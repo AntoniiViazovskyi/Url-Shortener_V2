@@ -1,22 +1,24 @@
-package com.goit.response;
+package com.goit.url.V2;
 
+import com.goit.auth.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.List;
 
 @Data
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
-public class UrlResponse {
-
+@NoArgsConstructor
+public class UrlDto {
     private Long id;
-    private Long userId;
+    private User user;
     private String shortId;
-    private String longUrl;
+    private String longURL;
     private LocalDateTime creationDate;
     private LocalDateTime expiryDate;
     private int clickCount;
