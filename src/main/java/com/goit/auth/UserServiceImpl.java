@@ -1,27 +1,25 @@
 package com.goit.auth;
 
-import com.goit.exception.LogEnum;
+import com.goit.exception.exceptions.userExceptions.UserAlreadyExistException;
 import com.goit.exception.exceptions.userExceptions.UserNotFoundException;
 import com.goit.url.V2.Url;
 import com.goit.url.V2.UrlRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserDetailsService, UserService {
@@ -37,65 +35,46 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     // Create
-    public UserDto createUser(UserDto userDTO, String rawPassword) {
-        User user = UserMapper.toEntity(userDTO);
-        user.setPassword(passwordEncoder.encode(rawPassword));
-        user.setRoles(List.of(roleService.findByName("ROLE_USER")));
-        User savedUser = userRepository.save(user);
-
-        log.info(String.format("%s: User %s was created by UserDTO and rawPassword", LogEnum.SERVICE, user));
-        return UserMapper.toDTO(savedUser);
-    }
-
-    public UserDto createUser(String email, String rawPassword) {
+    public UserDto createUser(String email, String rawPassword) throws UserAlreadyExistException {
+        if (existsByEmail(email)) throw new UserAlreadyExistException(email);
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(rawPassword));
         user.setRoles(List.of(roleService.findByName("ROLE_USER")));
         User savedUser = userRepository.save(user);
-
-        log.info(String.format("%s: User %s was created by email and rawPassword", LogEnum.SERVICE, user));
         return UserMapper.toDTO(savedUser);
     }
 
     // Read
     public UserDto getUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
-
-        log.info(String.format("%s request on retrieving user by id %s was sent", LogEnum.SERVICE, id));
         return user.map(UserMapper::toDTO).orElse(null);
     }
 
-    public User getByEmail(String email) {
-        log.info(String.format("%s request on retrieving user by email %s was sent", LogEnum.SERVICE, email));
-        return userRepository.findByEmail(email).orElseThrow(() ->
-                new UserNotFoundException(email));
-    }
-
     public List<UserDto> getAllUsers() {
-        log.info(String.format("%s request on retrieving all users was sent", LogEnum.SERVICE));
         return userRepository.findAll().stream()
                 .map(UserMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
-    public User getUserWithActiveUrls(String email) {
+    public User getByEmail(String email) throws UserNotFoundException {
+        return userRepository.findByEmail(email).orElseThrow(() ->
+                new UserNotFoundException(email));
+    }
+
+    public User getUserWithActiveUrls(String email) throws UserNotFoundException {
         User user = userRepository.findByEmail(email).orElseThrow(() ->
                 new UserNotFoundException(email));
-        List<Url> activeUrls = urlRepository.findAllActiveByUserId(user.getId());
+        List<Url> activeUrls = urlRepository.findActiveUrlsByUserId(user, LocalDateTime.now());
         user.setUrls(activeUrls);
-
-        log.info(String.format("%s request on retrieving user (%s) only with active urls was sent", LogEnum.SERVICE, user));
         return user;
     }
 
-    public User getUserWithAllUrls(String email) {
+    public User getUserWithAllUrls(String email) throws UserNotFoundException {
         User user = userRepository.findByEmail(email).orElseThrow(() ->
                 new UserNotFoundException(email));
-        List<Url> urls = urlRepository.findAllByUserId(user.getId());
+        List<Url> urls = urlRepository.findAllByUser(user);
         user.setUrls(urls);
-
-        log.info(String.format("%s request on retrieving user (%s) with all urls was sent", LogEnum.SERVICE, user));
         return user;
     }
 
@@ -106,12 +85,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             User user = optionalUser.get();
             user.setEmail(userDTO.getEmail());
             User updatedUser = userRepository.save(user);
-
-            log.info(String.format("%s user %s was updated to %s", LogEnum.SERVICE, user, updatedUser));
             return UserMapper.toDTO(updatedUser);
         }
-
-        log.info(String.format("%s user with id %s wasn't found --> wasn't updated", LogEnum.SERVICE, id));
         return null;
     }
 
@@ -119,12 +94,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public boolean deleteUser(Long id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
-
-            log.info(String.format("%s user with id %s was deleted", LogEnum.SERVICE, id));
             return true;
         }
-
-        log.info(String.format("%s user with id %s doesn't exist --> wasn't deleted", LogEnum.SERVICE, id));
         return false;
     }
 
@@ -135,8 +106,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = getByEmail(email);
+    public UserDetails loadUserByUsername(String email) {
+        User user = null;
+        try {
+            user = getByEmail(email);
+        } catch (UserNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),

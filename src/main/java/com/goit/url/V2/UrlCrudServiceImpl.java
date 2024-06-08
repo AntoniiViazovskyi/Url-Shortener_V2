@@ -3,22 +3,19 @@ package com.goit.url.V2;
 
 import com.goit.auth.User;
 import com.goit.auth.UserRepository;
-import com.goit.exception.LogEnum;
 import com.goit.exception.exceptions.longURLExceptions.InvalidLongURLException;
-import com.goit.exception.exceptions.userExceptions.UserNotFoundException;
-import jakarta.transaction.Transactional;
+import com.goit.exception.exceptions.shortURLExceptions.ShortURLNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UrlCrudServiceImpl implements UrlCrudService {
@@ -30,9 +27,9 @@ public class UrlCrudServiceImpl implements UrlCrudService {
 
 
     @Override
-    public UrlDto createURL(UrlDto urlDto) {
+    public UrlDto createURL(UrlDto urlDto) throws InvalidLongURLException {
         if (!URLValidator.isValid(urlDto.getLongURL()) || !URLValidator.isAccessibleUrl(urlDto.getLongURL())) {
-            throw new InvalidLongURLException(urlDto.getLongURL());
+            throw new InvalidLongURLException("Invalid long URL");
         }
 
         String generatedShortURL = shortURLGenerationService.generateShortURL(urlDto.getUser());
@@ -41,25 +38,21 @@ public class UrlCrudServiceImpl implements UrlCrudService {
         Url url = urlMapper.toEntity(urlDto);
         Url savedUrl = urlRepository.save(url);
 
-        log.info(String.format("%s: Url %s request was created", LogEnum.SERVICE, url));
         return urlMapper.toDTO(savedUrl);
     }
 
     @Override
     public Optional<UrlDto> getURLByShortId(String shortId) {
-        log.info(String.format("%s request on retrieving url by id %s was sent", LogEnum.SERVICE, shortId));
         return urlRepository.findByShortId(shortId).map(urlMapper::toDTO);
     }
 
     @Override
     public Optional<UrlDto> getURLByShortIdAndUser(String shortId, User user) {
-        log.info(String.format("%s request on retrieving user's (%s) url by urlId (%s) was sent", LogEnum.SERVICE, user, shortId));
         return urlRepository.findByShortIdAndUser(shortId, user).map(urlMapper::toDTO);
     }
 
     @Override
     public Optional<UrlDto> getURLById(Long id) {
-        log.info(String.format("%s request on retrieving url by urlId (%s) was sent", LogEnum.SERVICE, id));
         return urlRepository.findById(id).map(urlMapper::toDTO);
     }
 
@@ -69,10 +62,9 @@ public class UrlCrudServiceImpl implements UrlCrudService {
         String email = authentication.getPrincipal().toString();
 
         User user = userRepository.findByEmail(email).orElseThrow(() ->
-                new UserNotFoundException(email));
+                new UsernameNotFoundException(email));
 
-        log.info(String.format("%s request on retrieving all user's (%s) urls was sent", LogEnum.SERVICE, user));
-        return urlRepository.findAllByUserId(user.getId())
+        return urlRepository.findAllByUser(user)
                 .stream()
                 .map(urlMapper::toDTO)
                 .collect(Collectors.toList());
@@ -84,27 +76,24 @@ public class UrlCrudServiceImpl implements UrlCrudService {
         String email = authentication.getPrincipal().toString();
 
         User user = userRepository.findByEmail(email).orElseThrow(() ->
-                new UserNotFoundException(email));
+                new UsernameNotFoundException(email));
 
-        log.info(String.format("%s request on retrieving all user's (%s) active urls was sent", LogEnum.SERVICE, user));
-        return urlRepository.findAllActiveByUserId(user.getId())
+        return urlRepository.findActiveUrlsByUserId(user, LocalDateTime.now())
                 .stream()
                 .map(urlMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    @Transactional
-    public void increaseClicksCount(String shortId) {
-        log.info(String.format("%s request on increasing url's (shortUrl id: %s) click count was sent", LogEnum.SERVICE, shortId));
-        urlRepository.incClicksCount(shortId);
+    public void updateClicksCount(String shortId) {
+        urlRepository.incrementClickCount(shortId);
     }
 
     @Override
-    @Transactional
-    public void deleteByShortIdAndUser(String shortId, User user) {
-        log.info(String.format("%s request on deleting url by shortId (%s) and user (%s) was sent", LogEnum.SERVICE, shortId, user));
-        urlRepository.deleteUrlByShortIdAndUser(shortId, user);
+    public void deleteByShortIdAndUser(String shortId, User user) throws ShortURLNotFoundException {
+        if (urlRepository.deleteUrlByShortIdAndUser(shortId, user) <= 0) {
+                throw new ShortURLNotFoundException(shortId);
+        }
     }
 }
 

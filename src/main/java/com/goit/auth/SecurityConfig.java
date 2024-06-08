@@ -21,23 +21,26 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
-//@AllArgsConstructor
 @Configuration
 public class SecurityConfig {
     private final UserService userService;
+    private final AuthEntryPointJwt unauthorizedHandler;
     private final JwtRequestFilter jwtRequestFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                             auth
                                 .requestMatchers(
-                                        "/**",
+                                        "/*",
                                         "/auth/**",
                                         "/swagger-ui/**",
+                                        "/swagger-ui.html",
+                                        "/v3/api-docs/**",
                                         "/api-docs/**")
                                 .permitAll()
                                 .anyRequest().authenticated()

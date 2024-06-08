@@ -1,17 +1,28 @@
 package com.goit.auth;
 
-import com.goit.exception.LogEnum;
-import lombok.extern.slf4j.Slf4j;
+import com.goit.response.UserResponse;
+import org.springframework.stereotype.Component;
 
-@Slf4j
+import java.util.HashSet;
+import java.util.stream.Collectors;
+
+@Component
 public class UserMapper {
     public static UserDto toDTO(User user) {
-        log.info(String.format("%s User entity %s was mapped to UserDto", LogEnum.MAPPER, user));
-        return new UserDto(user.getId(), user.getEmail());
+        return UserDto.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .roles(user.getRoles()).build();
     }
 
     public static User toEntity(UserDto userDTO) {
-        log.info(String.format("%s UserDto %s was mapped to User entity", LogEnum.MAPPER, userDTO));
         return new User(userDTO.getEmail(), userDTO.getPassword());
+    }
+
+    public UserResponse toUserResponse(UserDto userDto) {
+        return UserResponse.builder()
+                .id(userDto.getId())
+                .email(userDto.getEmail())
+                .roles(new HashSet<>(userDto.getRoles())).build();
     }
 }

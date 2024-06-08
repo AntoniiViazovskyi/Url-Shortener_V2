@@ -2,7 +2,7 @@ package com.goit.controller;
 
 import com.goit.auth.*;
 import com.goit.exception.GlobalExceptionHandler;
-import com.goit.exception.LogEnum;
+import com.goit.exception.exceptions.userExceptions.UserAlreadyExistException;
 import com.goit.request.auth.LoginRequest;
 import com.goit.request.auth.SignupRequest;
 import com.goit.response.CustomErrorResponse;
@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -37,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final UserService userService;
+    private final UserMapper userMapper;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
 
@@ -59,10 +61,8 @@ public class AuthController {
         }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        User user = userService.getByEmail(loginRequest.getEmail());
-        String jwt = jwtUtils.generateToken(user);
+        String jwt = jwtUtils.generateToken(userService.getByEmail(loginRequest.getEmail()));
 
-        log.info(String.format("%s User %s has accomplished authentication process", LogEnum.CONTROLLER, user));
         return ResponseEntity.ok(new JwtResponseDto(jwt));
     }
 
@@ -74,10 +74,8 @@ public class AuthController {
         @ApiResponse(responseCode = "4XX", description = "Registration failed",
             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CustomErrorResponse.class)) })
     })
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-        UserDto user = userService.createUser(signUpRequest.getEmail(), signUpRequest.getPassword());
-
-        log.info(String.format("%s User %s has accomplished registration process", LogEnum.CONTROLLER, user));
-        return ResponseEntity.status(201).build();
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws UserAlreadyExistException {
+        UserDto userDto = userService.createUser(signUpRequest.getEmail(), signUpRequest.getPassword());
+        return ResponseEntity.status(201).body(userMapper.toUserResponse(userDto));
     }
 }
