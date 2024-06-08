@@ -2,6 +2,10 @@ package com.goit.auth;
 
 import com.goit.url.V2.Url;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,9 +25,16 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @Email
     @Column(unique = true)
     private String email;
 
+    @NotNull
+    @Size(min = 8, max = 100)
+    // uncomment for productions use
+//    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$", message =
+//            "Password must contain at least 8 characters, including digits, upper and lower case letters")
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -36,8 +47,6 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Url> urls;
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<Url> urls;
 
     public User(String email, String password) {
         this.email = email;

@@ -1,6 +1,8 @@
 package com.goit.url.V2;
 
 import com.goit.auth.User;
+import com.goit.exception.exceptions.longURLExceptions.InvalidLongURLException;
+import com.goit.exception.exceptions.shortURLExceptions.ShortURLNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,7 +10,7 @@ import java.util.Optional;
 
 @Service
 public interface UrlCrudService {
-    UrlDto createURL(UrlDto urlDto);
+    UrlDto createURL(UrlDto urlDto) throws InvalidLongURLException;
 
     Optional<UrlDto> getURLById(Long id);
     Optional<UrlDto> getURLByShortId(String shortId);
@@ -16,6 +18,6 @@ public interface UrlCrudService {
 
     List<UrlDto> getAllByUserId();
     List<UrlDto> getAllActiveByUserId();
-    void increaseClicksCount(String shortId);
-    void deleteByShortIdAndUser(String shortId, User user);
+    void updateClicksCount(String shortId);
+    void deleteByShortIdAndUser(String shortId, User user) throws ShortURLNotFoundException;
 }

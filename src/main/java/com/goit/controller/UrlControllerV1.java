@@ -2,7 +2,9 @@ package com.goit.controller;
 
 import com.goit.auth.User;
 import com.goit.auth.UserServiceImpl;
+import com.goit.exception.exceptions.longURLExceptions.InvalidLongURLException;
 import com.goit.exception.exceptions.shortURLExceptions.ShortURLNotFoundException;
+import com.goit.exception.exceptions.userExceptions.UserNotFoundException;
 import com.goit.request.CreateShortUrlRequest;
 import com.goit.response.CustomErrorResponse;
 import com.goit.response.UrlResponse;
@@ -59,7 +61,7 @@ public class UrlControllerV1 {
                             schema = @Schema(implementation = UrlResponse.class)) })
     })
     @SecurityRequirement(name = "BearerAuth")
-    public ResponseEntity<List<UrlResponse>> urlList(Principal principal) {
+    public ResponseEntity<List<UrlResponse>> urlList(Principal principal) throws UserNotFoundException {
         if (principal == null) throw new UsernameNotFoundException("User not found");
         User user = userService.getUserWithAllUrls(principal.getName());
         return ResponseEntity
@@ -79,7 +81,7 @@ public class UrlControllerV1 {
 
     })
     @SecurityRequirement(name = "BearerAuth")
-    public ResponseEntity<List<UrlResponse>> getActiveUrls(Principal principal) {
+    public ResponseEntity<List<UrlResponse>> getActiveUrls(Principal principal) throws UserNotFoundException {
         if (principal == null) throw new UsernameNotFoundException("User not found");
         User user = userService.getUserWithActiveUrls(principal.getName());
         return ResponseEntity
@@ -100,7 +102,7 @@ public class UrlControllerV1 {
     })
     @SecurityRequirement(name = "BearerAuth")
     public ResponseEntity<UrlStatsResponse> getUrlStatsByShorId(@NotBlank @NotNull @PathVariable("shortId") String shortId, Principal principal)
-            throws ShortURLNotFoundException {
+            throws ShortURLNotFoundException, UserNotFoundException {
         if (principal == null) throw new UsernameNotFoundException("User not found");
         User user = userService.getUserWithActiveUrls(principal.getName());
         UrlDto url = urlService.getURLByShortIdAndUser(shortId, user).orElseThrow(() ->
@@ -121,7 +123,7 @@ public class UrlControllerV1 {
                             schema = @Schema(implementation = CustomErrorResponse.class))})
     })
     @SecurityRequirement(name = "BearerAuth")
-    public ResponseEntity<UrlResponse> createNote(@Valid @NotNull @RequestBody CreateShortUrlRequest request, Principal principal) {
+    public ResponseEntity<UrlResponse> createNote(@Valid @NotNull @RequestBody CreateShortUrlRequest request, Principal principal) throws InvalidLongURLException, UserNotFoundException {
         if (principal == null) throw new UsernameNotFoundException("User not found");
         User user = userService.getByEmail(principal.getName());
         Url url = new Url();
@@ -146,7 +148,7 @@ public class UrlControllerV1 {
                             schema = @Schema(implementation = CustomErrorResponse.class)) }) })
     @ResponseStatus(HttpStatus.OK)
     @SecurityRequirement(name = "BearerAuth")
-    public void deleteUrlByShortId(@PathVariable("shortId") String  shortId, Principal principal) throws ShortURLNotFoundException {
+    public void deleteUrlByShortId(@PathVariable("shortId") String  shortId, Principal principal) throws ShortURLNotFoundException, UserNotFoundException {
         if (principal == null) throw new UsernameNotFoundException("User not found");
         User user = userService.getByEmail(principal.getName());
         urlService.deleteByShortIdAndUser(shortId, user);

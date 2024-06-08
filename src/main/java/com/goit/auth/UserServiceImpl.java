@@ -1,5 +1,7 @@
 package com.goit.auth;
 
+import com.goit.exception.exceptions.userExceptions.UserAlreadyExistException;
+import com.goit.exception.exceptions.userExceptions.UserNotFoundException;
 import com.goit.url.V2.Url;
 import com.goit.url.V2.UrlRepository;
 import jakarta.transaction.Transactional;
@@ -10,10 +12,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,15 +35,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     // Create
-    public UserDto createUser(UserDto userDTO, String rawPassword) {
-        User user = UserMapper.toEntity(userDTO);
-        user.setPassword(passwordEncoder.encode(rawPassword));
-        user.setRoles(List.of(roleService.findByName("ROLE_USER")));
-        User savedUser = userRepository.save(user);
-        return UserMapper.toDTO(savedUser);
-    }
-
-    public UserDto createUser(String email, String rawPassword) {
+    public UserDto createUser(String email, String rawPassword) throws UserAlreadyExistException {
+        if (existsByEmail(email)) throw new UserAlreadyExistException(email);
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(rawPassword));
@@ -62,23 +57,23 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 .collect(Collectors.toList());
     }
 
-    public User getByEmail(String email) {
+    public User getByEmail(String email) throws UserNotFoundException {
         return userRepository.findByEmail(email).orElseThrow(() ->
-                new UsernameNotFoundException(String.format("User '%s' not found", email)));
+                new UserNotFoundException(email));
     }
 
-    public User getUserWithActiveUrls(String email) {
+    public User getUserWithActiveUrls(String email) throws UserNotFoundException {
         User user = userRepository.findByEmail(email).orElseThrow(() ->
-                new UsernameNotFoundException(String.format("User '%s' not found", email)));
-        List<Url> activeUrls = urlRepository.findAllActiveByUserId(user.getId());
+                new UserNotFoundException(email));
+        List<Url> activeUrls = urlRepository.findActiveUrlsByUserId(user, LocalDateTime.now());
         user.setUrls(activeUrls);
         return user;
     }
 
-    public User getUserWithAllUrls(String email) {
+    public User getUserWithAllUrls(String email) throws UserNotFoundException {
         User user = userRepository.findByEmail(email).orElseThrow(() ->
-                new UsernameNotFoundException(String.format("User '%s' not found", email)));
-        List<Url> urls = urlRepository.findAllByUserId(user.getId());
+                new UserNotFoundException(email));
+        List<Url> urls = urlRepository.findAllByUser(user);
         user.setUrls(urls);
         return user;
     }
@@ -111,8 +106,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = getByEmail(email);
+    public UserDetails loadUserByUsername(String email) {
+        User user = null;
+        try {
+            user = getByEmail(email);
+        } catch (UserNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),

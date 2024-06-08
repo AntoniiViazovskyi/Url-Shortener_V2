@@ -3,13 +3,15 @@ package com.goit.url.V2;
 
 import com.goit.auth.User;
 import com.goit.auth.UserRepository;
-import jakarta.transaction.Transactional;
+import com.goit.exception.exceptions.longURLExceptions.InvalidLongURLException;
+import com.goit.exception.exceptions.shortURLExceptions.ShortURLNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,9 +27,9 @@ public class UrlCrudServiceImpl implements UrlCrudService {
 
 
     @Override
-    public UrlDto createURL(UrlDto urlDto) {
+    public UrlDto createURL(UrlDto urlDto) throws InvalidLongURLException {
         if (!URLValidator.isValid(urlDto.getLongURL()) || !URLValidator.isAccessibleUrl(urlDto.getLongURL())) {
-            throw new IllegalArgumentException("Invalid long URL");
+            throw new InvalidLongURLException("Invalid long URL");
         }
 
         String generatedShortURL = shortURLGenerationService.generateShortURL(urlDto.getUser());
@@ -60,9 +62,9 @@ public class UrlCrudServiceImpl implements UrlCrudService {
         String email = authentication.getPrincipal().toString();
 
         User user = userRepository.findByEmail(email).orElseThrow(() ->
-                new UsernameNotFoundException(String.format("User '%s' not found", email)));
+                new UsernameNotFoundException(email));
 
-        return urlRepository.findAllByUserId(user.getId())
+        return urlRepository.findAllByUser(user)
                 .stream()
                 .map(urlMapper::toDTO)
                 .collect(Collectors.toList());
@@ -74,24 +76,24 @@ public class UrlCrudServiceImpl implements UrlCrudService {
         String email = authentication.getPrincipal().toString();
 
         User user = userRepository.findByEmail(email).orElseThrow(() ->
-                new UsernameNotFoundException(String.format("User '%s' not found", email)));
+                new UsernameNotFoundException(email));
 
-        return urlRepository.findAllActiveByUserId(user.getId())
+        return urlRepository.findActiveUrlsByUserId(user, LocalDateTime.now())
                 .stream()
                 .map(urlMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    @Transactional
-    public void increaseClicksCount(String shortId) {
-        urlRepository.incClicksCount(shortId);
+    public void updateClicksCount(String shortId) {
+        urlRepository.incrementClickCount(shortId);
     }
 
     @Override
-    @Transactional
-    public void deleteByShortIdAndUser(String shortId, User user) {
-        urlRepository.deleteUrlByShortIdAndUser(shortId, user);
+    public void deleteByShortIdAndUser(String shortId, User user) throws ShortURLNotFoundException {
+        if (urlRepository.deleteUrlByShortIdAndUser(shortId, user) <= 0) {
+                throw new ShortURLNotFoundException(shortId);
+        }
     }
 }
 
