@@ -40,7 +40,6 @@ The "URL Shortener" project is a web service developed to convert long URLs into
 ### Stop & remove container
  - ```docker stop```
  - ```docker rm```
-<p><b>`docker stop`</b> and <b>`docker rm`</b> are used to manage individual containers.</p>
 ### Removing all containers
 ```docker-compose down```
 ## Testing
