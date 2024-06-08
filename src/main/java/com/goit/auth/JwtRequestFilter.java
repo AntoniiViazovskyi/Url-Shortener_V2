@@ -1,8 +1,10 @@
 package com.goit.auth;
 
 
+import com.goit.exception.exceptions.generalExceptions.BadJWTException;
 import com.goit.exception.exceptions.userExceptions.UserNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,14 +36,21 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwt = authHeader.substring(7);
             try {
                 userLogin = jwtUtils.getEmail(jwt);
-            } catch (ExpiredJwtException e ) {
+            } catch (ExpiredJwtException | BadJWTException e ) {
                 logger.warn("JWT Expired: {}", e);
             }
 
         }
 
         if (userLogin != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userLogin, null, jwtUtils.getRoles(jwt).stream().map(SimpleGrantedAuthority::new).toList());
+            UsernamePasswordAuthenticationToken token = null;
+            try {
+                token = new UsernamePasswordAuthenticationToken(
+                                userLogin, null, jwtUtils.getRoles(jwt).stream().map(SimpleGrantedAuthority::new).toList()
+                        );
+            } catch (BadJWTException e) {
+                logger.warn("Bad JWT: {}", e);
+            }
             SecurityContextHolder.getContext().setAuthentication(token);
         }
         filterChain.doFilter(request, response);

@@ -45,7 +45,6 @@ import java.util.Optional;
 @RequestMapping("/api/v1/urls")
 public class UrlControllerV1 {
 
-    private final UrlRepository urlRepository;
     private final UrlCrudServiceImpl urlService;
     private final UrlMapper urlMapper;
     private final UserServiceImpl userService;
@@ -132,7 +131,6 @@ public class UrlControllerV1 {
         url.setCreationDate(LocalDateTime.now());
         url.setExpiryDate(request.getExpiryDate());
         UrlDto shortUrl = urlService.createURL(urlMapper.toDTO(url));
-//        shortUrl.setShortURL(String.format("%s/%s", appDomain, shortUrl.getId()));
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(urlMapper.toUrlResponse(urlMapper.toEntity(shortUrl)));

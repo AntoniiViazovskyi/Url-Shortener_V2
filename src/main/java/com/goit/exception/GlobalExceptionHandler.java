@@ -11,6 +11,7 @@ import com.goit.exception.exceptions.shortURLExceptions.ShortURLRedirectionExcep
 import com.goit.exception.exceptions.userExceptions.UserAlreadyExistException;
 import com.goit.exception.exceptions.userExceptions.UserIncorrectPasswordException;
 import com.goit.exception.exceptions.userExceptions.UserNotFoundException;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -44,7 +45,7 @@ public class GlobalExceptionHandler {
 
     /* General exceptions */
 
-    @ExceptionHandler(value = {HttpMessageNotReadableException.class, MalformedJwtException.class})
+    @ExceptionHandler(value = {HttpMessageNotReadableException.class, ExpiredJwtException.class})
     public ResponseEntity<Map<String, List<String>>> unauthorizedAccessException(HttpMessageNotReadableException e) {
         return getErrorsMap(e, HttpStatus.BAD_REQUEST);
     }
