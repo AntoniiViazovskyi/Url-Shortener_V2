@@ -7,13 +7,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateShortUrlRequest {
-
-    private String shortId;
     private String longUrl;
-    private Date expiration_at;
+    private LocalDateTime expiryDate;
 }

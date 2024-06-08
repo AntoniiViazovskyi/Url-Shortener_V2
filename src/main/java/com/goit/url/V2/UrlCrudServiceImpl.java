@@ -3,6 +3,7 @@ package com.goit.url.V2;
 
 import com.goit.auth.User;
 import com.goit.auth.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,6 +45,11 @@ public class UrlCrudServiceImpl implements UrlCrudService {
     }
 
     @Override
+    public Optional<UrlDto> getURLByShortIdAndUser(String shortId, User user) {
+        return urlRepository.findByShortIdAndUser(shortId, user).map(urlMapper::toDTO);
+    }
+
+    @Override
     public Optional<UrlDto> getURLById(Long id) {
         return urlRepository.findById(id).map(urlMapper::toDTO);
     }
@@ -76,13 +82,16 @@ public class UrlCrudServiceImpl implements UrlCrudService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional
     public void increaseClicksCount(String shortId) {
         urlRepository.incClicksCount(shortId);
     }
 
     @Override
-    public void deleteByShortId(String shortId) {
-        urlRepository.deleteUrlByShortId(shortId);
+    @Transactional
+    public void deleteByShortIdAndUser(String shortId, User user) {
+        urlRepository.deleteUrlByShortIdAndUser(shortId, user);
     }
 }
 

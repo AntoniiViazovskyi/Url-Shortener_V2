@@ -1,5 +1,6 @@
 package com.goit.url.V2;
 
+import com.goit.auth.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,9 +12,10 @@ public interface UrlCrudService {
 
     Optional<UrlDto> getURLById(Long id);
     Optional<UrlDto> getURLByShortId(String shortId);
+    Optional<UrlDto> getURLByShortIdAndUser(String shortId, User user);
 
     List<UrlDto> getAllByUserId();
     List<UrlDto> getAllActiveByUserId();
     void increaseClicksCount(String shortId);
-    void deleteByShortId(String shortId);
+    void deleteByShortIdAndUser(String shortId, User user);
 }

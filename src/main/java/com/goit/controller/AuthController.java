@@ -38,7 +38,6 @@ public class AuthController {
     private final UserService userService;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
-    private final GlobalExceptionHandler globalExceptionHandler;
 
     @PostMapping("/login")
     @Operation(summary = "Login user")

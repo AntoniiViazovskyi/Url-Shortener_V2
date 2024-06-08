@@ -1,6 +1,7 @@
 package com.goit.url.V2;
 
 import com.goit.response.UrlResponse;
+import com.goit.response.UrlStatsResponse;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -29,6 +30,14 @@ public class UrlMapper {
                 .longUrl(urlDto.getLongURL())
                 .creationDate(urlDto.getCreationDate())
                 .expiryDate(urlDto.getExpiryDate())
+                .clickCount(urlDto.getClickCount())
+                .build();
+    }
+
+    public UrlStatsResponse toUrlStatsResponse(UrlDto urlDto) {
+        return UrlStatsResponse.builder()
+                .shortId(urlDto.getShortId())
+                .longUrl(urlDto.getLongURL())
                 .clickCount(urlDto.getClickCount())
                 .build();
     }
