@@ -27,7 +27,7 @@ public class IndexController {
 
     @GetMapping("")
     public ModelAndView index() {
-        log.info(String.format("%s redirection on index.html page", LogEnum.CONTROLLER));
+        log.info("{}: redirection on index.html page", LogEnum.CONTROLLER);
         return new ModelAndView("redirect:swagger-ui/index.html");
     }
 

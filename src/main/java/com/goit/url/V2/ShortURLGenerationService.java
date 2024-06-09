@@ -28,7 +28,7 @@ public class ShortURLGenerationService {
 
         String shortUrl = userHexId + maxIdHex;
 
-        log.info(String.format("%s short url for user %s was created", LogEnum.SERVICE, user));
+        log.info("{}: short url for user (id: {}) was created", LogEnum.SERVICE, user.getId());
         return shortUrl.replaceAll("^0[xX]+", "");
     }
 

@@ -67,7 +67,7 @@ public class UrlControllerV1 {
         if (principal == null) throw new UserNotFoundException();
         User user = userService.getUserWithAllUrls(principal.getName());
 
-        log.info(String.format("%s User (id: %s) url's were retrieved from the database", LogEnum.CONTROLLER, user.getId()));
+        log.info("{}: User (id: {}) url's were retrieved from the database", LogEnum.CONTROLLER, user.getId());
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(urlMapper.toUtlResponseList(user.getUrls()));
@@ -86,7 +86,7 @@ public class UrlControllerV1 {
         if (principal == null) throw new UserNotFoundException();
         User user = userService.getUserWithActiveUrls(principal.getName());
 
-        log.info(String.format("%s User (id: %s) active url's were retrieved from the database", LogEnum.SERVICE, user.getId()));
+        log.info("{}: User (id: {}) active url's were retrieved from the database", LogEnum.SERVICE, user.getId());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(urlMapper.toUtlResponseList(user.getUrls()));
@@ -111,7 +111,7 @@ public class UrlControllerV1 {
         UrlDto url = urlService.getURLByShortIdAndUser(shortId, user).orElseThrow(() ->
                         new ShortURLNotFoundException(shortId));
 
-        log.info(String.format("%s Url (id: %s) stats were retrieved from the database", LogEnum.SERVICE, url.getId()));
+        log.info("{}: Url (id: {}) stats were retrieved from the database", LogEnum.SERVICE, url.getId());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(urlMapper.toUrlStatsResponse(url));
@@ -129,7 +129,7 @@ public class UrlControllerV1 {
     })
     @SecurityRequirement(name = "BearerAuth")
     public ResponseEntity<UrlResponse> createNote(@Valid @NotNull @RequestBody CreateShortUrlRequest request, Principal principal) throws InvalidLongURLException, UserNotFoundException {
-        if (principal == null) throw new UsernameNotFoundException("User not found");
+        if (principal == null) throw new UserNotFoundException();
         User user = userService.getByEmail(principal.getName());
         Url url = new Url();
         url.setUser(user);
@@ -137,6 +137,8 @@ public class UrlControllerV1 {
         url.setCreationDate(LocalDateTime.now());
         url.setExpiryDate(request.getExpiryDate());
         UrlDto shortUrl = urlService.createURL(urlMapper.toDTO(url));
+
+        log.info("{}: Url (id: {}) was created", LogEnum.SERVICE, url.getId());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(urlMapper.toUrlResponse(urlMapper.toEntity(shortUrl)));
@@ -157,6 +159,6 @@ public class UrlControllerV1 {
         User user = userService.getByEmail(principal.getName());
         urlService.deleteByShortIdAndUser(shortId, user);
 
-        log.info(String.format("%s Url was deleted by shortId %s", LogEnum.CONTROLLER, shortId));
+        log.info("{}: Url was deleted by shortId {}", LogEnum.CONTROLLER, shortId);
     }
 }
