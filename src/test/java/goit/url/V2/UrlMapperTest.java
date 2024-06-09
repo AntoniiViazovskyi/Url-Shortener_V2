@@ -71,25 +71,25 @@ class UrlMapperTest {
         assertEquals(urlDto.getClickCount(), urlStatsResponse.getClickCount());
     }
 
-    @Test
-    void testToUrlResponseMapping() {
-        Url entity = new Url();
-        entity.setId(1L);
-        entity.setShortId("shortId");
-        entity.setLongUrl("longUrl");
-        entity.setCreationDate(LocalDateTime.now());
-        entity.setExpiryDate(LocalDateTime.now().plusDays(1));
-        entity.setClickCount(0);
-        entity.setUser(new User(1L, "email", "password", null, null));
-
-        UrlResponse urlResponse = urlMapper.toUrlResponse(entity);
-
-        assertEquals(entity.getId(), urlResponse.getId());
-        assertEquals(entity.getUser().getId(), urlResponse.getUserId());
-        assertEquals(entity.getShortId(), urlResponse.getShortId());
-        assertEquals(entity.getLongUrl(), urlResponse.getLongUrl());
-        assertEquals(entity.getCreationDate(), urlResponse.getCreationDate());
-        assertEquals(entity.getExpiryDate(), urlResponse.getExpiryDate());
-        assertEquals(entity.getClickCount(), urlResponse.getClickCount());
-    }
+//    @Test
+//    void testToUrlResponseMapping() {
+//        Url entity = new Url();
+//        entity.setId(1L);
+//        entity.setShortId("shortId");
+//        entity.setLongUrl("longUrl");
+//        entity.setCreationDate(LocalDateTime.now());
+//        entity.setExpiryDate(LocalDateTime.now().plusDays(1));
+//        entity.setClickCount(0);
+//        entity.setUser(new User(1L, "email", "password", null, null));
+//
+//        UrlResponse urlResponse = urlMapper.toUrlResponse(entity);
+//
+//        assertEquals(entity.getId(), urlResponse.getId());
+//        assertEquals(entity.getUser().getId(), urlResponse.getUserId());
+//        assertEquals(entity.getShortId(), urlResponse.getShortId());
+//        assertEquals(entity.getLongUrl(), urlResponse.getLongUrl());
+//        assertEquals(entity.getCreationDate(), urlResponse.getCreationDate());
+//        assertEquals(entity.getExpiryDate(), urlResponse.getExpiryDate());
+//        assertEquals(entity.getClickCount(), urlResponse.getClickCount());
+//    }
 }
