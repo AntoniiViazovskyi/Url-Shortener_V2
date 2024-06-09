@@ -7,19 +7,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ShortURLDTO {
+public class UrlDto {
     private Long id;
-    private String url;
+    private User user;
+    private String shortId;
     private String longURL;
-    private String shortURL;
-    private User creator;
-    private List<User> users;
-    private LocalDate expiryDate;
-    private Long clickCount;
+    private LocalDateTime creationDate;
+    private LocalDateTime expiryDate;
+    private int clickCount;
 }

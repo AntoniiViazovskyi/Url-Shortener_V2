@@ -1,5 +1,6 @@
 package com.goit.auth;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +10,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,27 +24,29 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class SecurityConfig {
     private final UserService userService;
+    private final AuthEntryPointJwt unauthorizedHandler;
     private final JwtRequestFilter jwtRequestFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.disable())
+        http.csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/api/open/**").permitAll()
-                        .requestMatchers("/api/user/**").hasRole("USER")
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("\"/auth/**\",\n" +
-                                "        \"/users/**\",\n" +
-                                "        \"/swagger-ui/**\",\n" +
-                                "        \"/api-docs/**\")\n" +
-                                "    .permitAll()").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                .authorizeHttpRequests(auth ->
+                            auth
+                                .requestMatchers(
+                                        "/*",
+                                        "/auth/**",
+                                        "/swagger-ui/**",
+                                        "/swagger-ui.html",
+                                        "/v3/api-docs/**",
+                                        "/api-docs/**")
+                                .permitAll()
+                                .anyRequest().authenticated()
+                );
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
     }
 
     @Bean

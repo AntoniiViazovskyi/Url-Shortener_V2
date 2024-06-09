@@ -1,23 +1,26 @@
 package com.goit.url.V2;
 
 import com.goit.auth.User;
+import com.goit.exception.LogEnum;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class ShortURLGenerationService {
 
-    private final ShortURLRepository shortURLRepository;
+    private final UrlRepository urlRepository;
 
     @Autowired
-    public ShortURLGenerationService(ShortURLRepository shortURLRepository) {
-        this.shortURLRepository = shortURLRepository;
+    public ShortURLGenerationService(UrlRepository urlRepository) {
+        this.urlRepository = urlRepository;
     }
 
     public String generateShortURL(User user) {
-        Optional<Long> maxIdOptional = shortURLRepository.getMaxId();
+        Optional<Long> maxIdOptional = urlRepository.getMaxId();
         long maxId = maxIdOptional.orElse(0L) + 1;
 
         String userHexId = Long.toHexString(user.getId());
@@ -25,6 +28,7 @@ public class ShortURLGenerationService {
 
         String shortUrl = userHexId + maxIdHex;
 
+        log.info("{}: short url for user (id: {}) was created", LogEnum.SERVICE, user.getId());
         return shortUrl.replaceAll("^0[xX]+", "");
     }
 

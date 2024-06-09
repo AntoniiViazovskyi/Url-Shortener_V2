@@ -5,15 +5,20 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.URL;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateShortUrlRequest {
 
-    private String shortId;
+    @URL
     private String longUrl;
-    private Date expiration_at;
+
+    @DateTimeFormat
+    private LocalDateTime expiryDate;
 }

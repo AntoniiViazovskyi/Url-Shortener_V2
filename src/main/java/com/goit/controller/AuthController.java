@@ -2,6 +2,8 @@ package com.goit.controller;
 
 import com.goit.auth.*;
 import com.goit.exception.GlobalExceptionHandler;
+import com.goit.exception.LogEnum;
+import com.goit.exception.exceptions.userExceptions.UserAlreadyExistException;
 import com.goit.request.auth.LoginRequest;
 import com.goit.request.auth.SignupRequest;
 import com.goit.response.CustomErrorResponse;
@@ -17,20 +19,16 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Validated
@@ -41,9 +39,9 @@ import java.util.stream.Collectors;
 public class AuthController {
 
     private final UserService userService;
+    private final UserMapper userMapper;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
-    private final GlobalExceptionHandler globalExceptionHandler;
 
     @PostMapping("/login")
     @Operation(summary = "Login user")
@@ -64,10 +62,11 @@ public class AuthController {
         }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateToken(userService.findByEmail(loginRequest.getEmail()));
+        User user = userService.getByEmail(loginRequest.getEmail());
+        String jwt = jwtUtils.generateToken(user);
 
-        return ResponseEntity
-                .ok(new JwtResponseDto(jwt));
+        log.info("{}: User (id: {}) has accomplished authentication process", LogEnum.CONTROLLER, user.getId());
+        return ResponseEntity.ok(new JwtResponseDto(jwt));
     }
 
     @PostMapping("/register")
@@ -78,8 +77,9 @@ public class AuthController {
         @ApiResponse(responseCode = "4XX", description = "Registration failed",
             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CustomErrorResponse.class)) })
     })
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-        userService.createUser(signUpRequest.getEmail(), signUpRequest.getPassword());
-        return ResponseEntity.status(201).build();
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws UserAlreadyExistException {
+        UserDto userDto = userService.createUser(signUpRequest.getEmail(), signUpRequest.getPassword());
+        log.info("{}: User (id: {}) has accomplished registration process", LogEnum.CONTROLLER, userDto.getId());
+        return ResponseEntity.status(201).body(userMapper.toUserResponse(userDto));
     }
 }
