@@ -2,6 +2,7 @@ package com.goit.controller;
 
 import com.goit.auth.*;
 import com.goit.exception.GlobalExceptionHandler;
+import com.goit.exception.LogEnum;
 import com.goit.exception.exceptions.userExceptions.UserAlreadyExistException;
 import com.goit.request.auth.LoginRequest;
 import com.goit.request.auth.SignupRequest;
@@ -61,8 +62,10 @@ public class AuthController {
         }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateToken(userService.getByEmail(loginRequest.getEmail()));
+        User user = userService.getByEmail(loginRequest.getEmail());
+        String jwt = jwtUtils.generateToken(user);
 
+        log.info(String.format("%s User (id: %s) has accomplished authentication process", LogEnum.CONTROLLER, user));
         return ResponseEntity.ok(new JwtResponseDto(jwt));
     }
 
@@ -76,6 +79,7 @@ public class AuthController {
     })
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws UserAlreadyExistException {
         UserDto userDto = userService.createUser(signUpRequest.getEmail(), signUpRequest.getPassword());
+        log.info(String.format("%s User (id: %s) has accomplished registration process", LogEnum.CONTROLLER, userDto.getId()));
         return ResponseEntity.status(201).body(userMapper.toUserResponse(userDto));
     }
 }

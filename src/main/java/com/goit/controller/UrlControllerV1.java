@@ -2,6 +2,7 @@ package com.goit.controller;
 
 import com.goit.auth.User;
 import com.goit.auth.UserServiceImpl;
+import com.goit.exception.LogEnum;
 import com.goit.exception.exceptions.longURLExceptions.InvalidLongURLException;
 import com.goit.exception.exceptions.shortURLExceptions.ShortURLNotFoundException;
 import com.goit.exception.exceptions.userExceptions.UserNotFoundException;
@@ -63,8 +64,10 @@ public class UrlControllerV1 {
     })
     @SecurityRequirement(name = "BearerAuth")
     public ResponseEntity<List<UrlResponse>> urlList(Principal principal) throws UserNotFoundException {
-        if (principal == null) throw new UsernameNotFoundException("User not found");
+        if (principal == null) throw new UserNotFoundException();
         User user = userService.getUserWithAllUrls(principal.getName());
+
+        log.info(String.format("%s User (id: %s) url's were retrieved from the database", LogEnum.CONTROLLER, user.getId()));
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(urlMapper.toUtlResponseList(user.getUrls()));
@@ -80,8 +83,10 @@ public class UrlControllerV1 {
     })
     @SecurityRequirement(name = "BearerAuth")
     public ResponseEntity<List<UrlResponse>> getActiveUrls(Principal principal) throws UserNotFoundException {
-        if (principal == null) throw new UsernameNotFoundException("User not found");
+        if (principal == null) throw new UserNotFoundException();
         User user = userService.getUserWithActiveUrls(principal.getName());
+
+        log.info(String.format("%s User (id: %s) active url's were retrieved from the database", LogEnum.SERVICE, user.getId()));
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(urlMapper.toUtlResponseList(user.getUrls()));
@@ -101,10 +106,12 @@ public class UrlControllerV1 {
     @SecurityRequirement(name = "BearerAuth")
     public ResponseEntity<UrlStatsResponse> getUrlStatsByShorId(@NotBlank @NotNull @PathVariable("shortId") String shortId, Principal principal)
             throws ShortURLNotFoundException, UserNotFoundException {
-        if (principal == null) throw new UsernameNotFoundException("User not found");
+        if (principal == null) throw new UserNotFoundException();
         User user = userService.getUserWithActiveUrls(principal.getName());
         UrlDto url = urlService.getURLByShortIdAndUser(shortId, user).orElseThrow(() ->
                         new ShortURLNotFoundException(shortId));
+
+        log.info(String.format("%s Url (id: %s) stats were retrieved from the database", LogEnum.SERVICE, url.getId()));
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(urlMapper.toUrlStatsResponse(url));
@@ -146,8 +153,10 @@ public class UrlControllerV1 {
     @ResponseStatus(HttpStatus.OK)
     @SecurityRequirement(name = "BearerAuth")
     public void deleteUrlByShortId(@PathVariable("shortId") String  shortId, Principal principal) throws ShortURLNotFoundException, UserNotFoundException {
-        if (principal == null) throw new UsernameNotFoundException("User not found");
+        if (principal == null) throw new UserNotFoundException();
         User user = userService.getByEmail(principal.getName());
         urlService.deleteByShortIdAndUser(shortId, user);
+
+        log.info(String.format("%s Url was deleted by shortId %s", LogEnum.CONTROLLER, shortId));
     }
 }
