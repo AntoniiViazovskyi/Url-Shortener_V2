@@ -16,13 +16,12 @@ public class UrlTest {
         String longUrl = "https://example.com";
         LocalDateTime creationDate = LocalDateTime.of(2024, 6, 9, 12, 0);
         LocalDateTime expiryDate = LocalDateTime.of(2024, 12, 31, 23, 59);
-        Long clickCount = 0L;
+        int clickCount = 0;
         User user = new User();
 
         Url url = new Url(id, shortUrl, longUrl, creationDate, expiryDate, clickCount, user);
 
         assertThat(url.getId()).isEqualTo(id);
-        assertThat(url.getShortUrl()).isEqualTo(shortUrl);
         assertThat(url.getLongUrl()).isEqualTo(longUrl);
         assertThat(url.getCreationDate()).isEqualTo(creationDate);
         assertThat(url.getExpiryDate()).isEqualTo(expiryDate);
@@ -37,12 +36,11 @@ public class UrlTest {
         String longUrl = "https://example.com";
         LocalDateTime creationDate = LocalDateTime.of(2024, 6, 9, 12, 0);
         LocalDateTime expiryDate = LocalDateTime.of(2024, 12, 31, 23, 59);
-        Long clickCount = 0L;
+        int clickCount = 0;
         User user = new User();
 
         Url url = Url.builder()
                 .id(id)
-                .shortUrl(shortUrl)
                 .longUrl(longUrl)
                 .creationDate(creationDate)
                 .expiryDate(expiryDate)
@@ -51,7 +49,6 @@ public class UrlTest {
                 .build();
 
         assertThat(url.getId()).isEqualTo(id);
-        assertThat(url.getShortUrl()).isEqualTo(shortUrl);
         assertThat(url.getLongUrl()).isEqualTo(longUrl);
         assertThat(url.getCreationDate()).isEqualTo(creationDate);
         assertThat(url.getExpiryDate()).isEqualTo(expiryDate);

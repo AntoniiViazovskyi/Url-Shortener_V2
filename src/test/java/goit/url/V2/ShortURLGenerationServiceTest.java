@@ -6,8 +6,6 @@ import static org.mockito.Mockito.*;
 import java.util.Optional;
 
 import com.goit.auth.User;
-import com.goit.url.V2.ShortURLGenerationService;
-import com.goit.url.V2.ShortURLRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,7 +15,7 @@ import org.mockito.MockitoAnnotations;
 public class ShortURLGenerationServiceTest {
 
     @Mock
-    private ShortURLRepository shortURLRepository;
+    private UrlRepository urlRepository;
 
     @InjectMocks
     private ShortURLGenerationService shortURLGenerationService;
@@ -33,7 +31,7 @@ public class ShortURLGenerationServiceTest {
 
     @Test
     public void testGenerateShortURLWhenMaxIdIsPresent() {
-        when(shortURLRepository.getMaxId()).thenReturn(Optional.of(100L));
+        when(urlRepository.getMaxId()).thenReturn(Optional.of(100L));
 
         String shortUrl = shortURLGenerationService.generateShortURL(user);
 
@@ -43,7 +41,7 @@ public class ShortURLGenerationServiceTest {
 
     @Test
     public void testGenerateShortURLWhenMaxIdIsNotPresent() {
-        when(shortURLRepository.getMaxId()).thenReturn(Optional.empty());
+        when(urlRepository.getMaxId()).thenReturn(Optional.empty());
 
         String shortUrl = shortURLGenerationService.generateShortURL(user);
 
@@ -54,10 +52,10 @@ public class ShortURLGenerationServiceTest {
 
     @Test
     public void testGenerateShortURLInteractionWithRepository() {
-        when(shortURLRepository.getMaxId()).thenReturn(Optional.of(100L));
+        when(urlRepository.getMaxId()).thenReturn(Optional.of(100L));
 
         shortURLGenerationService.generateShortURL(user);
 
-        verify(shortURLRepository, times(1)).getMaxId();
+        verify(urlRepository, times(1)).getMaxId();
     }
 }

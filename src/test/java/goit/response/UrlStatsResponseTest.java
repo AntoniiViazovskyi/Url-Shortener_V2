@@ -15,24 +15,22 @@ class UrlStatsResponseTest {
 
         Assertions.assertEquals(shortId, urlStatsResponse.getShortId());
         Assertions.assertEquals(longUrl, urlStatsResponse.getLongUrl());
-        Assertions.assertEquals(clickCount, urlStatsResponse.getClick_count());
+        Assertions.assertEquals(clickCount, urlStatsResponse.getClickCount());
     }
 
     @Test
     void testGettersAndSetters() {
         UrlStatsResponse urlStatsResponse = new UrlStatsResponse();
 
-        // Встановлення значень
         String shortId = "abc123";
         urlStatsResponse.setShortId(shortId);
         String longUrl = "http://example.com/long-url";
         urlStatsResponse.setLongUrl(longUrl);
         int clickCount = 10;
-        urlStatsResponse.setClick_count(clickCount);
+        urlStatsResponse.setClickCount(clickCount);
 
-        // Перевірка значень через геттери
         Assertions.assertEquals(shortId, urlStatsResponse.getShortId());
         Assertions.assertEquals(longUrl, urlStatsResponse.getLongUrl());
-        Assertions.assertEquals(clickCount, urlStatsResponse.getClick_count());
+        Assertions.assertEquals(clickCount, urlStatsResponse.getClickCount());
     }
 }
