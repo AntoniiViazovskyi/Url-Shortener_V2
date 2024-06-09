@@ -57,13 +57,9 @@ public class UrlMapper {
 
     public UrlResponse toUrlResponse(Url entity) {
         UrlResponse dto = new UrlResponse();
-        dto.setId(entity.getId());
-        dto.setUserId(entity.getUser().getId());
         dto.setShortId(entity.getShortId());
         dto.setLongUrl(entity.getLongUrl());
-        dto.setCreationDate(entity.getCreationDate());
         dto.setExpiryDate(entity.getExpiryDate());
-        dto.setClickCount(entity.getClickCount());
 
         log.info("{}: Url entity (id: {}) was mapped to UrlResponse", LogEnum.MAPPER, entity.getId());
         return dto;

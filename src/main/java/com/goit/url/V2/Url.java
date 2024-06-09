@@ -35,7 +35,7 @@ public class Url {
     @Column(name = "click_count", nullable = false)
     private int clickCount;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

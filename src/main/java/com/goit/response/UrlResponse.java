@@ -13,11 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UrlResponse {
 
-    private Long id;
-    private Long userId;
     private String shortId;
     private String longUrl;
-    private LocalDateTime creationDate;
     private LocalDateTime expiryDate;
-    private int clickCount;
 }
