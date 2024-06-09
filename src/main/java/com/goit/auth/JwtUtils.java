@@ -1,10 +1,13 @@
 package com.goit.auth;
 
 
+import com.goit.exception.exceptions.generalExceptions.BadJWTException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -46,23 +49,29 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    private Claims getClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+    private Claims getClaims(String token) throws BadJWTException {
+        Claims claims;
+        try {
+            claims = Jwts.parser()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (Exception e) {
+            throw new BadJWTException();
+        }
+        return claims;
     }
 
-    public Long getUserId(String token) {
+    public Long getUserId(String token) throws BadJWTException {
         return Long.parseLong(getClaims(token).get("id", String.class));
     }
 
-    public String getEmail(String token) {
+    public String getEmail(String token) throws BadJWTException {
         return getClaims(token).get("email", String.class);
     }
 
-    public List<String> getRoles(String token) {
+    public List<String> getRoles(String token) throws BadJWTException {
         return getClaims(token).get("roles", List.class);
     }
 }

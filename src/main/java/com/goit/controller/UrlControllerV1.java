@@ -12,6 +12,7 @@ import com.goit.response.UrlResponse;
 import com.goit.response.UrlStatsResponse;
 import com.goit.url.V2.*;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -46,7 +47,6 @@ import java.util.Optional;
 @RequestMapping("/api/v1/urls")
 public class UrlControllerV1 {
 
-    private final UrlRepository urlRepository;
     private final UrlCrudServiceImpl urlService;
     private final UrlMapper urlMapper;
     private final UserServiceImpl userService;
@@ -59,7 +59,8 @@ public class UrlControllerV1 {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "List urls",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UrlResponse.class)) })
+                    array = @ArraySchema(schema = @Schema(implementation = UrlResponse.class)))}
+            )
     })
     @SecurityRequirement(name = "BearerAuth")
     public ResponseEntity<List<UrlResponse>> urlList(Principal principal) throws UserNotFoundException {
@@ -73,15 +74,12 @@ public class UrlControllerV1 {
 }
 
     @GetMapping("/active")
-    @Operation(summary = "Get url by short")
+    @Operation(summary = "Get active urls")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found url by short_id",
+            @ApiResponse(responseCode = "200", description = "List active urls",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UrlResponse.class)) }),
-            @ApiResponse(responseCode = "404", description = "Url not found",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CustomErrorResponse.class)) })
-
+                            array = @ArraySchema(schema = @Schema(implementation = UrlResponse.class)))}
+            )
     })
     @SecurityRequirement(name = "BearerAuth")
     public ResponseEntity<List<UrlResponse>> getActiveUrls(Principal principal) throws UserNotFoundException {
@@ -97,7 +95,7 @@ public class UrlControllerV1 {
     @GetMapping("/{shortId}/stats")
     @Operation(summary = "Get stats by short")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Getting redirects count",
+            @ApiResponse(responseCode = "200", description = "Getting clicks count",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UrlStatsResponse.class)) }),
             @ApiResponse(responseCode = "404", description = "ShortUrl not found",
@@ -139,7 +137,6 @@ public class UrlControllerV1 {
         url.setCreationDate(LocalDateTime.now());
         url.setExpiryDate(request.getExpiryDate());
         UrlDto shortUrl = urlService.createURL(urlMapper.toDTO(url));
-//        shortUrl.setShortURL(String.format("%s/%s", appDomain, shortUrl.getId()));
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(urlMapper.toUrlResponse(urlMapper.toEntity(shortUrl)));
