@@ -49,7 +49,7 @@ public class UrlMapper {
     }
 
     public List<UrlResponse> toUtlResponseList(Collection<Url> entities) {
-        log.info("{}: Url's list: {}, was mapped to UrlResponse list", LogEnum.MAPPER, entities);
+        log.info("{}: Url's list, was mapped to UrlResponse list", LogEnum.MAPPER);
         return entities.stream()
                 .map(this::toUrlResponse)
                 .collect(Collectors.toList());
