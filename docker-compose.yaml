@@ -3,7 +3,7 @@
 
 services:
   goit-proj:
-    image: "url-shortv1"
+    image: "goit-proj"
     container_name: "goit-proj"
     ports:
       - "8080:8080"
