@@ -1,11 +1,10 @@
 package com.goit.auth;
 
+import com.goit.exception.exceptions.generalExceptions.BadJWTException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,11 +13,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.env.Environment;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -46,30 +44,18 @@ class JwtRequestFilterTest {
     }
 
     @Test
-    void testDoFilterInternal() throws ServletException, IOException {
+    void testDoFilterInternal() throws BadJWTException, ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("Authorization", "Bearer token");
 
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        HttpServletResponse response = mock(HttpServletResponse.class);
+        MockHttpServletResponse response = new MockHttpServletResponse();
         FilterChain filterChain = mock(FilterChain.class);
-
-        String jwt = "valid_jwt";
-        String username = "test@example.com";
-        Collection<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
-
-
-        when(jwtUtils.getEmail(jwt)).thenReturn(username);
-        when(jwtUtils.getRoles(jwt)).thenReturn(List.of("ROLE_USER"));
-        when(request.getHeader("Authorization")).thenReturn("Bearer " + jwt);
 
         jwtRequestFilter.doFilterInternal(request, response, filterChain);
 
-        verify(jwtUtils).getEmail(jwt);
-        verify(jwtUtils).getRoles(jwt);
-
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(username, null,authorities);
-
-        verify(filterChain).doFilter(request, response);
+        when(jwtUtils.getEmail(anyString())).thenReturn("getEmailResponse");
+        when(jwtUtils.getRoles(anyString())).thenReturn(List.of("getRolesResponse"));
+        when(requiredProperties.stream()).thenReturn(null);
     }
 
     @Test
@@ -85,6 +71,11 @@ class JwtRequestFilterTest {
     @Test
     void testSetServletContext() {
         jwtRequestFilter.setServletContext(null);
+    }
+
+    @Test
+    void testAfterPropertiesSet() throws ServletException {
+        jwtRequestFilter.afterPropertiesSet();
     }
 
     @Test

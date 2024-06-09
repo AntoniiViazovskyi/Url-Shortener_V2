@@ -11,7 +11,7 @@ public class UserNotFoundExceptionTest {
         String username = "testUser";
         UserNotFoundException exception = new UserNotFoundException(username);
 
-        String expectedMessage = "User with username = testUser not found.";
+        String expectedMessage = "User with username/email = testUser not found.";
         assertEquals(expectedMessage, exception.getMessage());
     }
 

@@ -39,5 +39,14 @@ public class Url {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    public Url(String shortId, String longUrl, LocalDateTime creationDate, LocalDateTime expiryDate, int clickCount, User user) {
+        this.shortId = shortId;
+        this.longUrl = longUrl;
+        this.creationDate = creationDate;
+        this.expiryDate = expiryDate;
+        this.clickCount = clickCount;
+        this.user = user;
+    }
+
 }
 

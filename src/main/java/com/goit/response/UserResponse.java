@@ -1,10 +1,7 @@
 package com.goit.response;
 
 import com.goit.auth.Role;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;

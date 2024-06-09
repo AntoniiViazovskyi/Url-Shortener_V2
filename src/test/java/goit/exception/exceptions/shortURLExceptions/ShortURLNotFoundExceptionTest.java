@@ -10,13 +10,13 @@ public class ShortURLNotFoundExceptionTest {
     public void testConstructor() {
         ShortURLNotFoundException exception = new ShortURLNotFoundException();
 
-        String expectedMessage = "Can not found short url without id.";
+        String expectedMessage = "Can not find short url without id.";
         assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
     public void testConstructorWithId() {
-        Long id = 123L;
+        String id = "123";
         ShortURLNotFoundException exception = new ShortURLNotFoundException(id);
 
         String expectedMessage = "Short url with id = 123 not found.";
