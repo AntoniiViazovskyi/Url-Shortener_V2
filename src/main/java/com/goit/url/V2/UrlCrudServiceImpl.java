@@ -42,25 +42,25 @@ public class UrlCrudServiceImpl implements UrlCrudService {
         Url url = urlMapper.toEntity(urlDto);
         Url savedUrl = urlRepository.save(url);
 
-        log.info(String.format("%s: request on saving Url %s was created", LogEnum.SERVICE, url));
+        log.info("{}: request on saving Url {} was created", LogEnum.SERVICE, url);
         return urlMapper.toDTO(savedUrl);
     }
 
     @Override
     public Optional<UrlDto> getURLByShortId(String shortId) {
-        log.info(String.format("%s request on retrieving url by id %s was sent", LogEnum.SERVICE, shortId));
+        log.info("{}: request on retrieving url by id {} was sent", LogEnum.SERVICE, shortId);
         return urlRepository.findByShortId(shortId).map(urlMapper::toDTO);
     }
 
     @Override
     public Optional<UrlDto> getURLByShortIdAndUser(String shortId, User user) {
-        log.info(String.format("%s request on retrieving user's (id: %s) url by urlId (%s) was sent", LogEnum.SERVICE, user.getId(), shortId));
+        log.info("{}: request on retrieving user's (id: {}) url by urlId ({}) was sent", LogEnum.SERVICE, user.getId(), shortId);
         return urlRepository.findByShortIdAndUser(shortId, user).map(urlMapper::toDTO);
     }
 
     @Override
     public Optional<UrlDto> getURLById(Long id) {
-        log.info(String.format("%s request on retrieving url by urlId (%s) was sent", LogEnum.SERVICE, id));
+        log.info("{}: request on retrieving url by urlId {} was sent", LogEnum.SERVICE, id);
         return urlRepository.findById(id).map(urlMapper::toDTO);
     }
 
@@ -72,7 +72,7 @@ public class UrlCrudServiceImpl implements UrlCrudService {
         User user = userRepository.findByEmail(email).orElseThrow(() ->
                 new UserNotFoundException(email));
 
-        log.info(String.format("%s request on retrieving all user's (id: %s) urls was sent", LogEnum.SERVICE, user.getId()));
+        log.info("{}: request on retrieving all user's (id: {}) urls was sent", LogEnum.SERVICE, user.getId());
         return urlRepository.findAllByUser(user)
                 .stream()
                 .map(urlMapper::toDTO)
@@ -87,7 +87,7 @@ public class UrlCrudServiceImpl implements UrlCrudService {
         User user = userRepository.findByEmail(email).orElseThrow(() ->
                 new UserNotFoundException(email));
 
-        log.info(String.format("%s request on retrieving all user's (%s) active urls was sent", LogEnum.SERVICE, user));
+        log.info("{}: request on retrieving all user's (id: {}) active urls was sent", LogEnum.SERVICE, user.getId());
         return urlRepository.findActiveUrlsByUserId(user, LocalDateTime.now())
                 .stream()
                 .map(urlMapper::toDTO)
@@ -96,7 +96,7 @@ public class UrlCrudServiceImpl implements UrlCrudService {
 
     @Override
     public void updateClicksCount(String shortId) {
-        log.info(String.format("%s request on increasing url's (shortUrl id: %s) click count was sent", LogEnum.SERVICE, shortId));
+        log.info("{}: request on increasing url's (shortUrl id: {}) click count was sent", LogEnum.SERVICE, shortId);
         urlRepository.incrementClickCount(shortId);
     }
 

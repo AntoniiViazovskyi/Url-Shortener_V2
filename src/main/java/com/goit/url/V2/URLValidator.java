@@ -15,10 +15,10 @@ public class URLValidator {
     public static boolean isValid(String urlStr) {
         try {
             new URL(urlStr);
-            log.info(String.format("%s Url %s has passed syntactics validation", LogEnum.VALIDATION, urlStr));
+            log.info("{}: Url {} has passed syntactics validation", LogEnum.VALIDATION, urlStr);
             return true;
         } catch (MalformedURLException e) {
-            log.info(String.format("%s Url %s didn't pass syntactics validation", LogEnum.VALIDATION, urlStr));
+            log.info("{}: Url {} didn't pass syntactics validation", LogEnum.VALIDATION, urlStr);
             return false;
         }
     }
@@ -30,10 +30,10 @@ public class URLValidator {
             connection.setRequestMethod("HEAD");
             int responseCode = connection.getResponseCode();
 
-            log.info(String.format("%s Url %s has passed accessibility validation", LogEnum.VALIDATION, url));
+            log.info("{}: Url {} has passed accessibility validation", LogEnum.VALIDATION, url);
             return (200 <= responseCode && responseCode < 400);
         } catch (IOException e) {
-            log.info(String.format("%s Url %s didn't pass accessibility validation", LogEnum.VALIDATION, url));
+            log.info("{}: Url {} didn't pass accessibility validation", LogEnum.VALIDATION, url);
             return false;
         }
     }

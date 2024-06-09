@@ -65,7 +65,7 @@ public class AuthController {
         User user = userService.getByEmail(loginRequest.getEmail());
         String jwt = jwtUtils.generateToken(user);
 
-        log.info(String.format("%s User (id: %s) has accomplished authentication process", LogEnum.CONTROLLER, user));
+        log.info("{}: User (id: {}) has accomplished authentication process", LogEnum.CONTROLLER, user.getId());
         return ResponseEntity.ok(new JwtResponseDto(jwt));
     }
 
@@ -79,7 +79,7 @@ public class AuthController {
     })
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws UserAlreadyExistException {
         UserDto userDto = userService.createUser(signUpRequest.getEmail(), signUpRequest.getPassword());
-        log.info(String.format("%s User (id: %s) has accomplished registration process", LogEnum.CONTROLLER, userDto.getId()));
+        log.info("{}: User (id: {}) has accomplished registration process", LogEnum.CONTROLLER, userDto.getId());
         return ResponseEntity.status(201).body(userMapper.toUserResponse(userDto));
     }
 }

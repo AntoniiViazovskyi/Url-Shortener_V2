@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Component
 public class UrlMapper {
     public UrlDto toDTO(Url url) {
-        log.info(String.format("%s Url entity %s was mapped to UrlDto", LogEnum.MAPPER, url));
+        log.info("{}: Url entity (id: {}) was mapped to UrlDto", LogEnum.MAPPER, url.getId());
         return UrlDto.builder()
                 .id(url.getId())
                 .user(url.getUser())
@@ -27,7 +27,7 @@ public class UrlMapper {
     }
 
     public Url toEntity(UrlDto urlDto) {
-        log.info(String.format("%s UrlDto %s was mapped to Url entity", LogEnum.MAPPER, urlDto));
+        log.info("{}: UrlDto (id: {}) was mapped to Url entity", LogEnum.MAPPER, urlDto.getId());
         return Url.builder()
                 .id(urlDto.getId())
                 .user(urlDto.getUser())
@@ -40,7 +40,7 @@ public class UrlMapper {
     }
 
     public UrlStatsResponse toUrlStatsResponse(UrlDto urlDto) {
-        log.info(String.format("%s UrlDto %s was mapped to UrlStatsResponse", LogEnum.MAPPER, urlDto));
+        log.info("{}: UrlDto (id: {}) was mapped to UrlStatsResponse", LogEnum.MAPPER, urlDto.getId());
         return UrlStatsResponse.builder()
                 .shortId(urlDto.getShortId())
                 .longUrl(urlDto.getLongURL())
@@ -49,7 +49,7 @@ public class UrlMapper {
     }
 
     public List<UrlResponse> toUtlResponseList(Collection<Url> entities) {
-        log.info(String.format("%s Url's list: %s, was mapped to UrlResponse list", LogEnum.MAPPER, entities));
+        log.info("{}: Url's list: {}, was mapped to UrlResponse list", LogEnum.MAPPER, entities);
         return entities.stream()
                 .map(this::toUrlResponse)
                 .collect(Collectors.toList());
@@ -65,7 +65,7 @@ public class UrlMapper {
         dto.setExpiryDate(entity.getExpiryDate());
         dto.setClickCount(entity.getClickCount());
 
-        log.info(String.format("%s Url entity %s was mapped to UrlResponse", LogEnum.MAPPER, entity));
+        log.info("{}: Url entity (id: {}) was mapped to UrlResponse", LogEnum.MAPPER, entity.getId());
         return dto;
     }
 }

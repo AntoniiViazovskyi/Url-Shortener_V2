@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         user.setRoles(List.of(roleService.findByName("ROLE_USER")));
         User savedUser = userRepository.save(user);
 
-        log.info(String.format("%s: User (id: %s) was created by UserDTO and rawPassword", LogEnum.SERVICE, user.getId()));
+        log.info("{}: User (id: {}) was created by UserDTO and rawPassword", LogEnum.SERVICE, user.getId());
         return UserMapper.toDTO(savedUser);
     }
 
@@ -54,18 +54,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public UserDto getUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
 
-        log.info(String.format("%s request on retrieving user by id %s was sent", LogEnum.SERVICE, id));
+        log.info("{}: request on retrieving user by id {} was sent", LogEnum.SERVICE, id);
         return user.map(UserMapper::toDTO).orElse(null);
     }
 
     public User getByEmail(String email) throws UserNotFoundException {
-        log.info(String.format("%s request on retrieving user by email %s was sent", LogEnum.SERVICE, email));
+        log.info("{}: request on retrieving user by email {} was sent", LogEnum.SERVICE, email);
         return userRepository.findByEmail(email).orElseThrow(() ->
                 new UserNotFoundException(email));
     }
 
     public List<UserDto> getAllUsers() {
-        log.info(String.format("%s request on retrieving all users was sent", LogEnum.SERVICE));
+        log.info("{}: request on retrieving all users was sent", LogEnum.SERVICE);
         return userRepository.findAll().stream()
                 .map(UserMapper::toDTO)
                 .collect(Collectors.toList());
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         List<Url> activeUrls = urlRepository.findActiveUrlsByUserId(user, LocalDateTime.now());
         user.setUrls(activeUrls);
 
-        log.info(String.format("%s request on retrieving user (id: %s) only with active urls was sent", LogEnum.SERVICE, user.getId()));
+        log.info("{}: request on retrieving user (id: {}) only with active urls was sent", LogEnum.SERVICE, user.getId());
         return user;
     }
 
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         List<Url> urls = urlRepository.findAllByUser(user);
         user.setUrls(urls);
 
-        log.info(String.format("%s request on retrieving user (id: %s) with all urls was sent", LogEnum.SERVICE, user.getId()));
+        log.info("{}: request on retrieving user (id: {}) with all urls was sent", LogEnum.SERVICE, user.getId());
         return user;
     }
 
@@ -99,11 +99,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             user.setEmail(userDTO.getEmail());
             User updatedUser = userRepository.save(user);
 
-            log.info(String.format("%s user %s was updated to %s", LogEnum.SERVICE, user, updatedUser));
+            log.info("{}: user {} was updated to {}", LogEnum.SERVICE, user, updatedUser);
             return UserMapper.toDTO(updatedUser);
         }
 
-        log.info(String.format("%s user with id %s wasn't found --> wasn't updated", LogEnum.SERVICE, id));
+        log.info("{}: user with id {} wasn't found --> wasn't updated", LogEnum.SERVICE, id);
         return null;
     }
 
@@ -112,11 +112,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
 
-            log.info(String.format("%s user with id %s was deleted", LogEnum.SERVICE, id));
+            log.info("{}: user with id {} was deleted", LogEnum.SERVICE, id);
             return true;
         }
 
-        log.info(String.format("%s user with id %s doesn't exist --> wasn't deleted", LogEnum.SERVICE, id));
+        log.info("{}: user with id {} doesn't exist --> wasn't deleted", LogEnum.SERVICE, id);
         return false;
     }
 
