@@ -13,6 +13,11 @@
       <env name="POSTGRES_DB_PROD_PORT" value="32768" />
       <env name="SPRING_LOCAL_PORT" value="8080" />
       <env name="SPRING_DOCKER_PORT" value="9999" />
+      <env name="SPRING_DOCKER_PORT" value="9999" />
+      <env name="LOCAL_DOMAIN" value="//localhost" />
+      <env name="PROD_DOMAIN" value="//localhost" />
+      <env name="JWT_SECRET" value="as542d54fkja656s7h6ndfjas1241234kdnsadiojfkjasdk1123rjkj34" />
+      <env name="JWT_LIMIT" value="7d" />
     </envs>
     <module name="Url-Shortener.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.goit.UrlShortenerApplication" />
