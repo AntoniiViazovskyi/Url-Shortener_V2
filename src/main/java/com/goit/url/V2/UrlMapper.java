@@ -4,6 +4,7 @@ import com.goit.exception.LogEnum;
 import com.goit.response.UrlResponse;
 import com.goit.response.UrlStatsResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -13,6 +14,10 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class UrlMapper {
+
+    @Value("${app.domain}")
+    private String appDomain;
+
     public UrlDto toDTO(Url url) {
         log.info("{}: Url entity (id: {}) was mapped to UrlDto", LogEnum.MAPPER, url.getId());
         return UrlDto.builder()
@@ -43,6 +48,7 @@ public class UrlMapper {
         log.info("{}: UrlDto (id: {}) was mapped to UrlStatsResponse", LogEnum.MAPPER, urlDto.getId());
         return UrlStatsResponse.builder()
                 .shortId(urlDto.getShortId())
+                .shortUrl(String.format("%s%s", getAppUrl(), urlDto.getShortId()))
                 .longUrl(urlDto.getLongURL())
                 .clickCount(urlDto.getClickCount())
                 .build();
@@ -58,10 +64,15 @@ public class UrlMapper {
     public UrlResponse toUrlResponse(Url entity) {
         UrlResponse dto = new UrlResponse();
         dto.setShortId(entity.getShortId());
+        dto.setShortUrl(String.format("%s%s", getAppUrl(), entity.getShortId()));
         dto.setLongUrl(entity.getLongUrl());
         dto.setExpiryDate(entity.getExpiryDate());
 
         log.info("{}: Url entity (id: {}) was mapped to UrlResponse", LogEnum.MAPPER, entity.getId());
         return dto;
+    }
+
+    private String getAppUrl() {
+        return appDomain.endsWith("/") ? appDomain : appDomain + "/";
     }
 }

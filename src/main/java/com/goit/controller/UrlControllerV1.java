@@ -51,9 +51,6 @@ public class UrlControllerV1 {
     private final UrlMapper urlMapper;
     private final UserServiceImpl userService;
 
-    @Value("${app.domain}")
-    private String appDomain;
-
     @GetMapping("")
     @Operation(summary = "Get all urls")
     @ApiResponses(value = {

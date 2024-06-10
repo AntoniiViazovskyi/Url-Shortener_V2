@@ -14,6 +14,7 @@ import java.util.UUID;
 public class UrlResponse {
 
     private String shortId;
+    private String shortUrl;
     private String longUrl;
     private LocalDateTime expiryDate;
 }
