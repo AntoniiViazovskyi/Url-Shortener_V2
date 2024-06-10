@@ -46,7 +46,7 @@ public class UrlCrudServiceImpl implements UrlCrudService {
         Url url = urlMapper.toEntity(urlDto);
         Url savedUrl = urlRepository.save(url);
 
-        log.info("{}: request on saving Url {} was created", LogEnum.SERVICE, url);
+        log.info("{}: request on saving Url (id: {}) was created", LogEnum.SERVICE, url.getId());
         return urlMapper.toDTO(savedUrl);
     }
 

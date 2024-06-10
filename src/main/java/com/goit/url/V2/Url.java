@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Data
 @Entity
@@ -48,5 +49,30 @@ public class Url {
         this.user = user;
     }
 
+    @Override
+    public String toString() {
+        return "Url{" +
+                "id=" + id +
+                ", shortId='" + shortId + '\'' +
+                ", longUrl='" + longUrl + '\'' +
+                ", creationDate=" + creationDate +
+                ", expiryDate=" + expiryDate +
+                ", clickCount=" + clickCount +
+                ", userId=" + user.getId() +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Url url = (Url) o;
+        return clickCount == url.clickCount && Objects.equals(id, url.id) && Objects.equals(shortId, url.shortId) && Objects.equals(longUrl, url.longUrl) && Objects.equals(creationDate, url.creationDate) && Objects.equals(expiryDate, url.expiryDate) && Objects.equals(user.getId(), url.user.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, shortId, longUrl, creationDate, expiryDate, clickCount, user.getId());
+    }
 }
 
