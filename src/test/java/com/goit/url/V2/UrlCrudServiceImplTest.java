@@ -4,6 +4,7 @@ import com.goit.auth.Role;
 import com.goit.auth.User;
 import com.goit.auth.UserRepository;
 import com.goit.exception.exceptions.shortURLExceptions.ShortURLNotFoundException;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -74,8 +75,8 @@ class UrlCrudServiceImplTest {
         when(urlRepository.findByShortIdAndUser(anyString(), any(User.class))).thenReturn(Optional.empty());
 
         Optional<UrlDto> result = urlCrudServiceImpl.getURLByShortIdAndUser
-                ("shortId", new User(Long.valueOf(1), "email", "password", List.of(new Role("name")),
-                        List.of(new Url(Long.valueOf(1), "shortId", "longUrl", LocalDateTime.of(2024,
+                ("shortId", new User(1L, "email", "password", List.of(new Role("name")),
+                        List.of(new Url(1L, "shortId", "longUrl", LocalDateTime.of(2024,
                                 Month.JUNE, 9, 22, 17, 44), LocalDateTime.of(2024,
                                 Month.JUNE, 9, 22, 17, 44), 0, null))));
 
@@ -86,7 +87,7 @@ class UrlCrudServiceImplTest {
     void testGetURLById() {
         when(urlRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Optional<UrlDto> result = urlCrudServiceImpl.getURLById(Long.valueOf(1));
+        Optional<UrlDto> result = urlCrudServiceImpl.getURLById(1L);
 
         Assertions.assertTrue(result.isEmpty());
     }
@@ -102,8 +103,8 @@ class UrlCrudServiceImplTest {
     @Test
     void testDeleteByShortIdAndUser() throws ShortURLNotFoundException {
         when(urlRepository.deleteUrlByShortIdAndUser(anyString(), any(User.class))).thenReturn(0);
-        User user = new User(Long.valueOf(1), "email", "password", List.of(new Role("name")),
-                List.of(new Url(Long.valueOf(1), "shortId", "longUrl",
+        User user = new User(1L, "email", "password", List.of(new Role("name")),
+                List.of(new Url(1L, "shortId", "longUrl",
                         LocalDateTime.of(2024, Month.JUNE, 9, 22, 17, 44), LocalDateTime.of(2024,
                         Month.JUNE, 9, 22, 17, 44), 0, null)));
 

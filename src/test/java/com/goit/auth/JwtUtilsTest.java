@@ -2,9 +2,11 @@ package com.goit.auth;
 
 import com.goit.exception.exceptions.generalExceptions.BadJWTException;
 import com.goit.url.V2.Url;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,8 +32,8 @@ class JwtUtilsTest {
 
     @Test
     void testGenerateToken() {
-        String result = jwtUtils.generateToken(new User(Long.valueOf(1), "email", "password",
-                List.of(new Role("name")), List.of(new Url(Long.valueOf(1), "shortId", "longUrl",
+        String result = jwtUtils.generateToken(new User(1L, "email", "password",
+                List.of(new Role("name")), List.of(new Url(1L, "shortId", "longUrl",
                 LocalDateTime.of(2024, Month.JUNE, 9, 21, 35, 57), LocalDateTime.of(2024,
                 Month.JUNE, 9, 21, 35, 57), 0, null))));
         assertNotNull(result);
@@ -39,8 +41,8 @@ class JwtUtilsTest {
 
     @Test
     void testGetEmail() throws BadJWTException {
-        String token = jwtUtils.generateToken(new User(Long.valueOf(1), "email", "password",
-                List.of(new Role("name")), List.of(new Url(Long.valueOf(1), "shortId", "longUrl",
+        String token = jwtUtils.generateToken(new User(1L, "email", "password",
+                List.of(new Role("name")), List.of(new Url(1L, "shortId", "longUrl",
                 LocalDateTime.of(2024, Month.JUNE, 9, 21, 35, 57), LocalDateTime.of(2024,
                 Month.JUNE, 9, 21, 35, 57), 0, null))));
         String result = jwtUtils.getEmail(token);
@@ -49,8 +51,8 @@ class JwtUtilsTest {
 
     @Test
     void testGetRoles() throws BadJWTException {
-        String token = jwtUtils.generateToken(new User(Long.valueOf(1), "email", "password",
-                List.of(new Role("name")), List.of(new Url(Long.valueOf(1), "shortId", "longUrl",
+        String token = jwtUtils.generateToken(new User(1L, "email", "password",
+                List.of(new Role("name")), List.of(new Url(1L, "shortId", "longUrl",
                 LocalDateTime.of(2024, Month.JUNE, 9, 21, 35, 57), LocalDateTime.of(2024,
                 Month.JUNE, 9, 21, 35, 57), 0, null))));
         List<String> result = jwtUtils.getRoles(token);

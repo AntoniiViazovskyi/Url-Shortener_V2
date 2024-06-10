@@ -32,7 +32,6 @@ public class UrlTest {
     @Test
     public void testUrlBuilder() {
         Long id = 1L;
-        String shortUrl = "shorturl";
         String longUrl = "https://example.com";
         LocalDateTime creationDate = LocalDateTime.of(2024, 6, 9, 12, 0);
         LocalDateTime expiryDate = LocalDateTime.of(2024, 12, 31, 23, 59);

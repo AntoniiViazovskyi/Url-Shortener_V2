@@ -1,17 +1,11 @@
 package com.goit.auth;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.goit.url.V2.Url;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class UserTest {
 

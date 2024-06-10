@@ -1,14 +1,10 @@
 package com.goit.url.V2;
 
-import com.goit.auth.User;
-import com.goit.response.UrlResponse;
 import com.goit.response.UrlStatsResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,7 +20,8 @@ class UrlMapperTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
         urlMapper = new UrlMapper();
-    }@Test
+    }
+    @Test
     void testToDTOMapping() {
         Url url = new Url();
         url.setId(1L);

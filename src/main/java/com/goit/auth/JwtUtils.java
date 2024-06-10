@@ -1,13 +1,12 @@
 package com.goit.auth;
 
-
 import com.goit.exception.exceptions.generalExceptions.BadJWTException;
+
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;

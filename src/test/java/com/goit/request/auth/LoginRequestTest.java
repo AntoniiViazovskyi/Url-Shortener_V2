@@ -1,6 +1,5 @@
 package com.goit.request.auth;
 
-import com.goit.request.auth.LoginRequest;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
