@@ -17,7 +17,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@RunWith(SpringRunner.class)
+//@RunWith(SpringRunner.class)
 @SpringBootTest
 @TestPropertySource(locations="classpath:application-test.properties")
 class JwtUtilsTest {
