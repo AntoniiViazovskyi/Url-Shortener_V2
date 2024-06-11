@@ -1,6 +1,6 @@
 package com.goit.auth;
 
-import com.goit.url.V2.Url;
+import com.goit.url.v2.Url;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

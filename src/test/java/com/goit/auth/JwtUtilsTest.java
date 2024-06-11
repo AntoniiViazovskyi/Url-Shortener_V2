@@ -1,17 +1,15 @@
 package com.goit.auth;
 
 import com.goit.exception.exceptions.generalExceptions.BadJWTException;
-import com.goit.url.V2.Url;
+import com.goit.url.v2.Url;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
 import java.time.Month;

@@ -1,4 +1,4 @@
-package com.goit.url.V2;
+package com.goit.url.v2;
 
 import com.goit.auth.User;
 import com.goit.exception.LogEnum;

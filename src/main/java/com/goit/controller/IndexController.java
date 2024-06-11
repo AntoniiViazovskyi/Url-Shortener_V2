@@ -1,11 +1,9 @@
 package com.goit.controller;
 
 import com.goit.exception.LogEnum;
-import com.goit.exception.exceptions.shortURLExceptions.ShortURLNotFoundException;
-import com.goit.url.V2.UrlCrudService;
+import com.goit.url.v2.UrlCrudService;
 
-import com.goit.url.V2.UrlDto;
-import jakarta.servlet.http.HttpServlet;
+import com.goit.url.v2.UrlDto;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

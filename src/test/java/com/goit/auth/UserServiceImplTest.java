@@ -1,8 +1,8 @@
 package com.goit.auth;
 
 import com.goit.exception.exceptions.userExceptions.UserNotFoundException;
-import com.goit.url.V2.Url;
-import com.goit.url.V2.UrlRepository;
+import com.goit.url.v2.Url;
+import com.goit.url.v2.UrlRepository;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

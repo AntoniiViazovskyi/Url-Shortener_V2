@@ -1,4 +1,4 @@
-package com.goit.url.V2;
+package com.goit.url.v2;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

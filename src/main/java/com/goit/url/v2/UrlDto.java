@@ -1,4 +1,4 @@
-package com.goit.url.V2;
+package com.goit.url.v2;
 
 import com.goit.auth.User;
 import lombok.AllArgsConstructor;
@@ -6,9 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Builder

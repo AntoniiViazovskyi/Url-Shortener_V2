@@ -1,4 +1,4 @@
-package com.goit.url.V2;
+package com.goit.url.v2;
 
 import com.goit.exception.LogEnum;
 import lombok.extern.slf4j.Slf4j;
