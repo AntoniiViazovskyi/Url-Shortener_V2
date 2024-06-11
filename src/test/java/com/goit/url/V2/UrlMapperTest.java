@@ -1,26 +1,60 @@
 package com.goit.url.V2;
 
+import com.goit.auth.User;
+import com.goit.response.UrlResponse;
 import com.goit.response.UrlStatsResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
+
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-//@ActiveProfiles("tests")
+@SpringBootTest
+@ActiveProfiles("test")
 class UrlMapperTest {
+
+    @Autowired
     private UrlMapper urlMapper;
 
     @Value("${app.domain}")
     private String appDomain;
 
+    @Autowired
+    private ApplicationContext context;
+
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
-        urlMapper = new UrlMapper();
+//        MockitoAnnotations.initMocks(this);
+//        urlMapper = new UrlMapper();
     }
+
+    @Test
+    public void testActiveProfiles() {
+        String[] activeProfiles = context.getEnvironment().getActiveProfiles();
+        System.out.println("Active profiles: " + String.join(", ", activeProfiles));
+
+        assertEquals("test", activeProfiles[0]);
+
+        String domainProperty = context.getEnvironment().getProperty("app.domain");
+        assertNotNull(domainProperty, "Property 'app.domain' should be loaded");
+        assertEquals("http://localhost:8080", domainProperty);
+    }
+
     @Test
     void testToDTOMapping() {
         Url url = new Url();
@@ -68,33 +102,33 @@ class UrlMapperTest {
         urlDto.setShortId("shortId");
         urlDto.setLongURL("longUrl");
         urlDto.setClickCount(0);
+        String shortUrl = appDomain +"/" + urlDto.getShortId();
 
         UrlStatsResponse urlStatsResponse = urlMapper.toUrlStatsResponse(urlDto);
 
         assertEquals(urlDto.getShortId(), urlStatsResponse.getShortId());
         assertEquals(urlDto.getLongURL(), urlStatsResponse.getLongUrl());
         assertEquals(urlDto.getClickCount(), urlStatsResponse.getClickCount());
+        assertEquals(shortUrl, urlStatsResponse.getShortUrl());
     }
 
-//    @Test
-//    void testToUrlResponseMapping() {
-//        Url entity = new Url();
-//        entity.setId(1L);
-//        entity.setShortId("shortId");
-//        entity.setLongUrl("longUrl");
-//        entity.setCreationDate(LocalDateTime.now());
-//        entity.setExpiryDate(LocalDateTime.now().plusDays(1));
-//        entity.setClickCount(0);
-//        entity.setUser(new User(1L, "email", "password", null, null));
-//
-//        UrlResponse urlResponse = urlMapper.toUrlResponse(entity);
-//
-//        assertEquals(entity.getId(), urlResponse.getId());
-//        assertEquals(entity.getUser().getId(), urlResponse.getUserId());
-//        assertEquals(entity.getShortId(), urlResponse.getShortId());
-//        assertEquals(entity.getLongUrl(), urlResponse.getLongUrl());
-//        assertEquals(entity.getCreationDate(), urlResponse.getCreationDate());
-//        assertEquals(entity.getExpiryDate(), urlResponse.getExpiryDate());
-//        assertEquals(entity.getClickCount(), urlResponse.getClickCount());
-//    }
+    @Test
+    void testToUrlResponseMapping() {
+        Url entity = new Url();
+        entity.setId(1L);
+        entity.setShortId("shortId");
+        entity.setLongUrl("longUrl");
+        entity.setCreationDate(LocalDateTime.now());
+        entity.setExpiryDate(LocalDateTime.now().plusDays(1));
+        entity.setClickCount(0);
+        entity.setUser(new User(1L, "email", "password", null, null));
+        String shortUrl = appDomain +"/shortId";
+
+        UrlResponse urlResponse = urlMapper.toUrlResponse(entity);
+
+        assertEquals(entity.getShortId(), urlResponse.getShortId());
+        assertEquals(entity.getLongUrl(), urlResponse.getLongUrl());
+        assertEquals(entity.getExpiryDate(), urlResponse.getExpiryDate());
+        assertEquals(shortUrl, urlResponse.getShortUrl());
+    }
 }

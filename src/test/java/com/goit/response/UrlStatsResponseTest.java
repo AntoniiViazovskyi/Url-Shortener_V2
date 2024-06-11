@@ -35,7 +35,6 @@ class UrlStatsResponseTest {
 
         Assertions.assertEquals(shortId, urlStatsResponse.getShortId());
         Assertions.assertEquals(shortUrl, urlStatsResponse.getShortUrl());
-        Assertions.assertEquals(shortId, urlStatsResponse.getShortId());
         Assertions.assertEquals(longUrl, urlStatsResponse.getLongUrl());
         Assertions.assertEquals(clickCount, urlStatsResponse.getClickCount());
     }

@@ -2,6 +2,8 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.0'
 	id 'io.spring.dependency-management' version '1.1.5'
+	id 'jacoco'
+	id "org.barfuin.gradle.jacocolog" version "3.1.0"
 }
 
 group = 'com.goit'
@@ -16,6 +18,7 @@ configurations {
 		extendsFrom annotationProcessor
 	}
 }
+
 
 repositories {
 	mavenCentral()
@@ -46,12 +49,30 @@ dependencies {
 	testImplementation 'org.testcontainers:postgresql'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
-	// https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations
-//	implementation 'io.swagger.core.v3:swagger-annotations:2.2.22'
-
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
+
+	finalizedBy jacocoTestReport
 }
+
+jacocoTestReport {
+	dependsOn test // tests are required to run before generating the report
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				// test coverages in percents
+				minimum = 0.5
+			}
+		}
+	}
+}
+
+check.dependsOn jacocoTestCoverageVerification

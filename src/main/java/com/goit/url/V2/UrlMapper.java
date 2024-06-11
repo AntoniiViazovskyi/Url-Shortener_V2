@@ -48,7 +48,7 @@ public class UrlMapper {
         log.info("{}: UrlDto (id: {}) was mapped to UrlStatsResponse", LogEnum.MAPPER, urlDto.getId());
         return UrlStatsResponse.builder()
                 .shortId(urlDto.getShortId())
-                .shortUrl(String.format("%s%s", getAppUrl(), urlDto.getShortId()))
+                .shortUrl(getAppUrl(urlDto.getShortId()))
                 .longUrl(urlDto.getLongURL())
                 .clickCount(urlDto.getClickCount())
                 .build();
@@ -64,7 +64,7 @@ public class UrlMapper {
     public UrlResponse toUrlResponse(Url entity) {
         UrlResponse dto = new UrlResponse();
         dto.setShortId(entity.getShortId());
-        dto.setShortUrl(String.format("%s%s", getAppUrl(), entity.getShortId()));
+        dto.setShortUrl(getAppUrl(entity.getShortId()));
         dto.setLongUrl(entity.getLongUrl());
         dto.setExpiryDate(entity.getExpiryDate());
 
@@ -72,7 +72,10 @@ public class UrlMapper {
         return dto;
     }
 
-    private String getAppUrl() {
-        return appDomain.endsWith("/") ? appDomain : appDomain + "/";
+    private String getAppUrl(String shortId) {
+        if (appDomain == null) throw new RuntimeException("Property 'app.domain' should not be null");
+        return appDomain.endsWith("/") ?
+                String.format("%s%s", appDomain, shortId) :
+                String.format("%s/%s", appDomain, shortId);
     }
 }
