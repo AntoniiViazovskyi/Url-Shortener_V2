@@ -22,6 +22,17 @@ The "URL Shortener" project is a web service developed to convert long URLs into
  + Docker
  + docker-compose
 ## Environmental Variables
+### Sensitive variables which must be in `Edit Configuration` menu
+- ```
+- DEFAULT_H2_DB_HOST=jdbc:h2:mem:testdb;DEFAULT_H2_DB_USERNAME=sa;
+- DEFAULT_H2_DB_PASSWORD=;DEFAULT_APP_CACHING=true;DEFAULT_APP_URL=http://localhost:8080;
+- DOCKER_POSTGRES_DB_USERNAME=postgres;DOCKER_POSTGRES_DB_PASSWORD=1234;DOCKER_POSTGRES_DB_NAME=url_shortener;
+- DOCKER_POSTGRES_DB_HOST=localhost;DOCKER_POSTGRES_DB_PORT=5432;DOCKER_APP_URL=http://localhost:9999;DOCKER_APP_CACHING=true
+- ;PROD_POSTGRES_DB_USERNAME=postgres;PROD_POSTGRES_DB_PASSWORD=1234;PROD_POSTGRES_DB_NAME=url_shortener;PROD_POSTGRES_DB_HOST=localhost;
+- PROD_POSTGRES_DB_PORT=5432;PROD_APP_URL=http://localhost:8080;PROD_APP_CACHING=true;LOCAL_POSTGRES_DB_USERNAME=postgres;LOCAL_POSTGRES_DB_PASSWORD=1234;
+- LOCAL_POSTGRES_DB_NAME=url_shortener;LOCAL_POSTGRES_DB_HOST=localhost;LOCAL_POSTGRES_DB_PORT=5432;MAIN_APP_URL=http://localhost:8080;MAIN_APP_CACHING=false;
+- TEST_APP_URL=http://localhost:8080;TEST_APP_CACHING=false;JWT_SECRET_PROPS=as542d54fkja656s7h6ndfjas1241234kdnsadiojfkjasdk1123rjkj34;JWT_LIMIT_PROPS=7d
+- ```
 ### PostgreSQL Database Configuration
 - ```POSTGRES_DB_USERNAME:``` The username for accessing the PostgreSQL database. Default value: ```postgres```.
 - ```POSTGRES_DB_PASSWORD:``` The password for the root user of the PostgreSQL database. Default value: ```1234```.
