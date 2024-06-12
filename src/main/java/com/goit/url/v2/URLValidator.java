@@ -11,7 +11,7 @@ import java.net.URL;
 @Slf4j
 public class URLValidator {
 
-    //Метод для перевірки синтаксичної коректності
+    //The method for syntax check
     public static boolean isValid(String urlStr) {
         try {
             new URL(urlStr);
@@ -23,7 +23,7 @@ public class URLValidator {
         }
     }
 
-    //Метод для перевірки доступності
+    //Accessibility check
     public static boolean isAccessibleUrl(String url) {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();

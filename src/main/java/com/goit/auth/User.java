@@ -33,9 +33,6 @@ public class User implements UserDetails {
 
     @NotNull
     @Size(min = 8, max = 100)
-    // uncomment for productions use
-//    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$", message =
-//            "Password must contain at least 8 characters, including digits, upper and lower case letters")
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
