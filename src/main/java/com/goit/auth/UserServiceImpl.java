@@ -3,18 +3,22 @@ package com.goit.auth;
 import com.goit.exception.LogEnum;
 import com.goit.exception.exceptions.userExceptions.UserAlreadyExistException;
 import com.goit.exception.exceptions.userExceptions.UserNotFoundException;
+
 import com.goit.url.v2.Url;
 import com.goit.url.v2.UrlRepository;
+
 import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

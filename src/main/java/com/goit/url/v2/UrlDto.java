@@ -1,6 +1,7 @@
 package com.goit.url.v2;
 
 import com.goit.auth.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

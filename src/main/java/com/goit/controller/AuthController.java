@@ -1,25 +1,27 @@
 package com.goit.controller;
 
 import com.goit.auth.*;
-import com.goit.exception.GlobalExceptionHandler;
 import com.goit.exception.LogEnum;
 import com.goit.exception.exceptions.userExceptions.UserAlreadyExistException;
 import com.goit.request.auth.LoginRequest;
 import com.goit.request.auth.SignupRequest;
 import com.goit.response.CustomErrorResponse;
 import com.goit.response.UserResponse;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import jakarta.validation.Valid;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;

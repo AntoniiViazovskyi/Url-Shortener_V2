@@ -3,7 +3,6 @@ package com.goit.response;
 import com.goit.auth.Role;
 import lombok.*;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Getter
