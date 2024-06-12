@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -142,7 +143,7 @@ class AuthAndUrlControllerTest {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     public void testUrlList() throws Exception
     {
         String jsonRequest = "{ \"longUrl\": \"http://epowhost.com\", \"expiryDate\": \"2025-06-11T14:32:42\" }";
@@ -151,8 +152,9 @@ class AuthAndUrlControllerTest {
                         .content(jsonRequest)
                         .header("Authorization", "Bearer " + jwtToken))
                 .andDo(print())
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$").exists())
-                .andExpect(jsonPath("$.shortId").isNotEmpty());
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].longUrl").isNotEmpty());
     }
 }
