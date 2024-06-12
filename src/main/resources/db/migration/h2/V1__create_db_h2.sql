@@ -28,6 +28,6 @@ CREATE TABLE urls (
     creation_date TIMESTAMP NOT NULL,
     expiry_date TIMESTAMP NOT NULL,
     click_count INT NOT NULL,
-    user_id BIGINT NOT NULL,
+    user_id LONG NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE SET NULL
 );
